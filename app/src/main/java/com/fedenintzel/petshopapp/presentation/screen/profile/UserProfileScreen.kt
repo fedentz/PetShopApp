@@ -92,8 +92,8 @@ fun UserProfileScreen() {
                             name = product.name,
                             price = product.price,
                             imageResId = product.imageResId,
-                            onAddClick = { /* TODO */ },
-                            onCardClick = { /* TODO */ }
+                            onAddClick = { /*  */ },
+                            onCardClick = { /*  */ }
                         )
                     }
                 }
