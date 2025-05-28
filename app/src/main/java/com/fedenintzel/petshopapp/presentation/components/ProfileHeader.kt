@@ -1,6 +1,7 @@
 package com.fedenintzel.petshopapp.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ fun ProfileHeader(
                     .height(159.dp)
                     .clip(RoundedCornerShape(24.dp))
                     .align(Alignment.TopCenter)
+
             )
 
             // Imagen de perfil centrada abajo
@@ -66,6 +68,7 @@ fun ProfileHeader(
                     .align(Alignment.BottomCenter)
                     .clip(CircleShape)
                     .border(2.dp, Color.White, CircleShape)
+                    .background(Color(0xFFEDEDED))
             )
         }
 
