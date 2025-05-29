@@ -59,9 +59,7 @@ fun OnBoardingScreen() {
                 ImgOnBoarding()
                 Spacer(modifier = Modifier.height(16.dp))
                 Slogan()
-            }
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier = Modifier.height(32.dp))
                 CarrouselDots()
                 Spacer(modifier = Modifier.height(32.dp))
                 GetStartedButton()
