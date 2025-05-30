@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,21 +21,26 @@ import com.fedenintzel.petshopapp.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.fedenintzel.petshopapp.ui.theme.Poppins
+import coil.compose.AsyncImage
 
 /**
  * Componente que representa una tarjeta de producto
+ * Puede recibir imagen desde URL o recurso local
  *
- * @param name Nombre del producto (ej: "RC Kitten")
- * @param price Precio del producto (Ej: 20.99)
- * @param imageResId Recurso de imagen del producto (drawable)
- * @param onAddClick Acción al presionar el botón "+" (Ej: agregar al carrito)
- * @param onCardClick Acción al presionar la tarjeta completa (por Ej: navegar a detalles)
+ *
+ * @param name Nombre del producto
+ * @param price Precio del producto
+ * @param imageUrl URL de la imagen remota (opcional)
+ * @param imageResId Recurso local de imagen (opcional) Sino usa product_image por default
+ * @param onAddClick Acción del botón "+"
+ * @param onCardClick Acción al tocar la card
  */
 @Composable
 fun ProductCard(
     name: String,
     price: Double,
-    imageResId: Int,
+    imageUrl: String? = null,
+    @DrawableRes imageResId: Int? = null,
     onAddClick: () -> Unit,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -48,15 +54,39 @@ fun ProductCard(
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Imagen
-        Image(
-            painter = painterResource(id = imageResId),
-            contentDescription = name,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.size(142.dp)
-        )
+        Box(modifier = Modifier.size(142.dp)) {
+            when {
+                imageUrl != null -> {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = name,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
 
-        // Nombre + Precio + Botón "+"
+                imageResId != null -> {
+                    Image(
+                        painter = painterResource(id = imageResId),
+                        contentDescription = name,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                else -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.product_image),
+                        contentDescription = name,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,9 +94,7 @@ fun ProductCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
                     text = name,
                     fontSize = 12.sp,
@@ -74,7 +102,6 @@ fun ProductCard(
                     fontWeight = FontWeight.Normal,
                     color = Color.Black
                 )
-
                 Text(
                     text = "$${"%.2f".format(price)}",
                     fontSize = 20.sp,
@@ -98,9 +125,7 @@ fun ProductCard(
                     modifier = Modifier.size(16.dp)
                 )
             }
-
         }
-
     }
 }
 
@@ -110,7 +135,7 @@ fun ProductCardPreview() {
     ProductCard(
         name = "RC Kitten",
         price = 20.99,
-        imageResId = R.drawable.product_image,
+        //imageResId = R.drawable.product_image,
         onAddClick = { /* Agregar al carrito */ },
         onCardClick = { /* Navegar a ProductDetails */ }
     )
