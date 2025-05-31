@@ -1,0 +1,74 @@
+package com.fedenintzel.petshopapp.presentation.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.fedenintzel.petshopapp.R
+
+@Composable
+fun Header(
+    userName: String = "Jebres, Surakarta",
+    onSearchClick: () -> Unit = {},
+    onNotificationsClick: () -> Unit = {}
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            // Location
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Location",
+                    fontSize = 12.sp,
+                    color = Color(0xFFB3B1B0)
+                )
+                IconButton(
+                    onClick = { },
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(start = 2.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_arrow_down),
+                        contentDescription = "Expand location"
+                    )
+                }
+            }
+            Text(
+                text = userName,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        Row {
+            IconButton(onClick = onSearchClick) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_search_custom),
+                    contentDescription = "Search",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            IconButton(onClick = onNotificationsClick) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_bell_custom),
+                    contentDescription = "Notifications",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+

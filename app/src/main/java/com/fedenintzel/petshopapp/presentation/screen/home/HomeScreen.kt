@@ -7,15 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,8 +19,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
 import com.fedenintzel.petshopapp.presentation.components.Banner
-import com.fedenintzel.petshopapp.R
 import androidx.compose.ui.draw.clip
+import com.fedenintzel.petshopapp.presentation.components.Header
 
 @JvmOverloads
 @Composable
@@ -42,47 +38,11 @@ fun HomeScreen(
             .background(Color.White),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
+        // Header - Navbar
         item {
-            // Header
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Location",
-                        fontSize = 12.sp,
-                        color = Color(0xFFB3B1B0)
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "Jebres, Surakarta",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_down),
-                            contentDescription = "Expand location",
-                            tint = Color(0xFFB3B1B0),
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-                Row {
-                    IconButton(onClick = { /* search action */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
-                    }
-                    IconButton(onClick = { /* notifications action */ }) {
-                        Icon(Icons.Default.Notifications, contentDescription = "Notifications")
-                    }
-                }
-            }
+            Header()
         }
-
-        // Banner --> USÁ EL COMPONENTE
+        // Banner
         item {
             Banner(
                 modifier = Modifier
