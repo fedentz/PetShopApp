@@ -6,9 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.fedenintzel.petshopapp.data.remote.LoginResponse
+import com.fedenintzel.petshopapp.data.remote.dto.LoginResponse
 import com.fedenintzel.petshopapp.data.repository.AuthRepository
-import com.fedenintzel.petshopapp.data.repository.Result
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
