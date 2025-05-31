@@ -1,6 +1,5 @@
 package com.fedenintzel.petshopapp.presentation.account
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Composable que muestra la pantalla de "Create Account".
@@ -33,8 +32,8 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
  */
 @Composable
 fun CreateAccountScreen(
-    uiState: CreateAccountUiState,
-    onCreateAccountClick: (fullName: String, email: String, password: String, agreed: Boolean) -> Unit,
+    uiState: StateFlow<CreateAccountUiState>,
+    onCreateAccountClick: (String, String, String, Boolean) -> Unit,
     onLoginClick: () -> Unit
 ) {
     // Variables locales que reflejan el estado

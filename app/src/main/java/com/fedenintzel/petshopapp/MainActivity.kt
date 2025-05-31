@@ -1,27 +1,22 @@
 package com.fedenintzel.petshopapp
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fedenintzel.petshopapp.data.remote.AuthApiService
 import com.fedenintzel.petshopapp.data.repository.AuthRepository
-import com.fedenintzel.petshopapp.presentation.account.CreateAccountScreen
+import com.fedenintzel.petshopapp.presentation.account.CreateAccountScreenContainer
 import com.fedenintzel.petshopapp.presentation.account.CreateAccountViewModel
-import com.fedenintzel.petshopapp.presentation.login.LoginScreen
-import com.fedenintzel.petshopapp.presentation.viewmodel.LoginUiState
+import com.fedenintzel.petshopapp.presentation.login.LoginScreenContainer
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-
 
 class MainActivity : ComponentActivity() {
 
@@ -64,10 +59,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     // ─── Pantalla de Login ───
                     composable(Destinations.LOGIN) {
-                        val loginUiState: LoginUiState = loginViewModel.uiState.collectAsState().value
-
-                        LoginScreen(
-                            uiState = loginUiState,
+                        LoginScreenContainer(
+                            loginViewModel = loginViewModel,
                             onLoginClick = { email, password ->
                                 loginViewModel.login(email, password)
                             },
@@ -79,10 +72,8 @@ class MainActivity : ComponentActivity() {
 
                     // ─── Pantalla de Crear Cuenta ───
                     composable(Destinations.CREATE_ACCOUNT) {
-                        val createAccountUiState = createAccountViewModel.uiState.collectAsState().value
-
-                        CreateAccountScreen(
-                            uiState = createAccountUiState,
+                        CreateAccountScreenContainer(
+                            createAccountViewModel = createAccountViewModel,
                             onCreateAccountClick = { fullName, email, password, agreed ->
                                 createAccountViewModel.createAccount(
                                     fullName = fullName,

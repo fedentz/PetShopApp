@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.data.remote.dto.LoginResponse
 import com.fedenintzel.petshopapp.data.repository.AuthRepository
+import com.fedenintzel.petshopapp.domain.usecase.Result
 import kotlinx.coroutines.launch
 
 data class LoginUiState(
@@ -27,8 +28,8 @@ class LoginViewModel(
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
             when (val result = repo.login(username, password)) {
-                is Result.Success -> {
-                    uiState = uiState.copy(user = result.data)
+                is Result.Success<*> -> {
+                    uiState = uiState.copy(user = result.data as LoginResponse?)
                 }
                 is Result.Error -> {
                     uiState = uiState.copy(errorMessage = result.message)
