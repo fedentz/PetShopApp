@@ -1,5 +1,7 @@
+
 pluginManagement {
     repositories {
+        //google()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -7,10 +9,11 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,4 +24,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "PetShopApp"
 include(":app")
- 
