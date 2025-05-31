@@ -1,14 +1,11 @@
 package com.fedenintzel.petshopapp.presentation.screen.home
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
@@ -17,27 +14,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.fedenintzel.petshopapp.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.geometry.Offset
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
-import androidx.compose.ui.zIndex
+import com.fedenintzel.petshopapp.presentation.components.Banner
+import com.fedenintzel.petshopapp.R
+import androidx.compose.ui.draw.clip
 
 @JvmOverloads
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel() // HomeViewModel debe tener uiState con products, isLoading, error y addToCart
+    viewModel: HomeViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -90,9 +82,9 @@ fun HomeScreen(
             }
         }
 
-        // Banner
+        // Banner --> USÁ EL COMPONENTE
         item {
-            BannerComposable(
+            Banner(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp)
@@ -217,91 +209,3 @@ fun HomeScreen(
         }
     }
 }
-
-@Composable
-fun BannerComposable(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .height(170.dp)
-            .fillMaxWidth()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(36.dp))
-                .background(Color(0xFF7140FD))
-                .align(Alignment.Center)
-        ) {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                drawCircle(
-                    color = Color(0xFF9F7CFF).copy(alpha = 0.29f),
-                    radius = size.minDimension * 0.22f,
-                    center = androidx.compose.ui.geometry.Offset(x = size.width * 0.18f, y = size.height * 0.23f)
-                )
-                drawCircle(
-                    color = Color(0xFF9F7CFF).copy(alpha = 0.29f),
-                    radius = size.minDimension * 0.19f,
-                    center = androidx.compose.ui.geometry.Offset(x = size.width * 0.90f, y = size.height * 0.18f)
-                )
-                drawCircle(
-                    color = Color(0xFF9F7CFF).copy(alpha = 0.29f),
-                    radius = size.minDimension * 0.16f,
-                    center = androidx.compose.ui.geometry.Offset(x = size.width * 0.80f, y = size.height * 0.82f)
-                )
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 18.dp)
-                .fillMaxHeight()
-                .width(145.dp)
-        ) {
-            Image(
-                painter = painterResource(R.drawable.comidabanner),
-                contentDescription = "Royal Canin Back",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(100.dp)
-                    .align(Alignment.CenterStart)
-                    .offset(x = 8.dp, y = 12.dp)
-                    .zIndex(1f)
-            )
-
-            // Imagen de adelante (más grande, adelante)
-            Image(
-                painter = painterResource(R.drawable.comidabanner),
-                contentDescription = "Royal Canin Front",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.Center)
-                    .offset(x = 28.dp, y = 0.dp)
-                    .zIndex(2f)
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(start = 170.dp, end = 30.dp, top = 32.dp, bottom = 24.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                "Royal Canin\nAdult Pomeraniann",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 19.sp,
-            )
-            Text(
-                "Get an interesting promo\nhere, without conditions",
-                color = Color.White.copy(alpha = 0.85f),
-                fontSize = 14.sp
-            )
-        }
-    }
-}
-
