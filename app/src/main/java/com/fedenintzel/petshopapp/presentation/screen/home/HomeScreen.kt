@@ -53,7 +53,8 @@ fun HomeScreen(
         item {
             Header(
                 onLocationClick = { showLocationSheet = true },
-                onNotificationsClick = { navController.navigate("notifications") }
+                onNotificationsClick = { navController.navigate("notifications") },
+                onSearchClick = { navController.navigate("search") }
             )
             LocationSheet(
                 show = showLocationSheet,
