@@ -4,22 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.fedenintzel.petshopapp.data.remote.AuthApiService
 import com.fedenintzel.petshopapp.data.repository.AuthRepository
 import com.fedenintzel.petshopapp.presentation.login.LoginScreen
-import com.fedenintzel.petshopapp.presentation.viewmodel.LoginUiState
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import dagger.hilt.android.AndroidEntryPoint
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
