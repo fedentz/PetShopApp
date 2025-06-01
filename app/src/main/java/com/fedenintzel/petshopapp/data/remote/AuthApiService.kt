@@ -1,9 +1,14 @@
 package com.fedenintzel.petshopapp.data.remote
 
+import com.fedenintzel.petshopapp.data.remote.dto.ForgotPasswordRequest
+import com.fedenintzel.petshopapp.data.remote.dto.ForgotPasswordResponse
+import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordRequest
+import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordResponse
 import com.fedenintzel.petshopapp.data.remote.dto.LoginRequest
 import com.fedenintzel.petshopapp.data.remote.dto.LoginResponse
 import com.fedenintzel.petshopapp.data.remote.dto.RegisterRequest
 import com.fedenintzel.petshopapp.data.remote.dto.RegisterResponse
+
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -18,4 +23,10 @@ interface AuthApiService {
     suspend fun register(
         @Body request: RegisterRequest
     ): RegisterResponse
+
+    @POST("auth/forgot")
+    suspend fun forgotPassword(@Body request: ForgotPasswordRequest): ForgotPasswordResponse
+
+    @POST("auth/reset")
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): ResetPasswordResponse
 }
