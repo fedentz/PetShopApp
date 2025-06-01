@@ -58,10 +58,10 @@ fun SearchScreen(
                         painter = painterResource(id = R.drawable.ic_arrow_back),
                         contentDescription = "Back",
                         modifier = Modifier
-                            .size(40.dp) // Tamaño del círculo de fondo
+                            .size(40.dp)
                             .background(Color.White, shape = CircleShape)
                             .clickable { navController.popBackStack() }
-                            .padding(10.dp) // Para que la flecha quede de 20dp centrada
+                            .padding(10.dp)
                     )
                 }
             }

@@ -139,7 +139,9 @@ fun HomeScreen(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    TextButton(onClick = { /* Ver todas */ }) {
+                    TextButton(
+                        onClick = { navController.navigate("best_seller")  }
+                        ) {
                         Text(
                             "View All",
                             color = Color(0xFF7140FD)
