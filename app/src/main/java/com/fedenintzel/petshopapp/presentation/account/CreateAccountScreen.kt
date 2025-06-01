@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
@@ -21,7 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
-import kotlinx.coroutines.flow.StateFlow
+
 
 /**
  * Composable que muestra la pantalla de "Create Account".
@@ -32,7 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
  */
 @Composable
 fun CreateAccountScreen(
-    uiState: StateFlow<CreateAccountUiState>,
+    uiState: CreateAccountUiState,
     onCreateAccountClick: (String, String, String, Boolean) -> Unit,
     onLoginClick: () -> Unit
 ) {
@@ -202,7 +203,7 @@ fun CreateAccountScreen(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Error,
+                        imageVector = Icons.Default.Warning,
                         contentDescription = "Error",
                         tint = Color.Red,
                         modifier = Modifier.size(20.dp)

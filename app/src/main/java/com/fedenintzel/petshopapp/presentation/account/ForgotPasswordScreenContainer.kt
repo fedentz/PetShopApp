@@ -30,7 +30,8 @@ fun ForgotPasswordScreenContainer(
     ForgotPasswordScreen(
         uiState = uiState,
         onEmailChange = { viewModel.onEmailChange(it) },
-        onSendClick = { viewModel.sendResetLink(email) },
+        //onSendClick = { viewModel.sendResetLink(email) },
+        onSendClick = { viewModel.sendResetLink(uiState.email) },
         onNewPasswordChange = { viewModel.onNewPasswordChange(it) },
         onConfirmPasswordChange = { viewModel.onConfirmPasswordChange(it) },
         onResetClick = { viewModel.resetPassword() },
