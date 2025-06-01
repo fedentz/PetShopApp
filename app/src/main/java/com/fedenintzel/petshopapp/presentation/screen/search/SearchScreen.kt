@@ -19,13 +19,14 @@ import com.fedenintzel.petshopapp.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.Image
+import com.fedenintzel.petshopapp.presentation.components.CategorySelector
 
 @Composable
 fun SearchScreen(
     navController: NavController
 ) {
     val categories = listOf("Food", "Toys", "Accesories")
-    val selectedCategory = "Food"
+    var selectedCategory by remember { mutableStateOf(categories.first()) }
     val recentSearches = listOf(
         "Royal Canin Persian 500g",
         "Royal Canin Persian 500g",
@@ -104,38 +105,11 @@ fun SearchScreen(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        // Categorías
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_swap_custom), // Tu ícono de swap
-                contentDescription = "Swap",
-                tint = Color(0xFFB3B1B0),
-                modifier = Modifier
-                    .size(34.dp)
-                    .background(Color(0xFFF8F8F8), shape = CircleShape)
-                    .padding(8.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            categories.forEach { category ->
-                val selected = category == selectedCategory
-                Box(
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(if (selected) Color(0xFF7140FD) else Color(0xFFF8F8F8))
-                        .padding(horizontal = 22.dp, vertical = 10.dp)
-                ) {
-                    Text(
-                        category,
-                        color = if (selected) Color.White else Color(0xFFB3B1B0),
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-            }
-        }
+        CategorySelector(
+            categories = categories,
+            selectedCategory = selectedCategory,
+            onCategorySelected = { selectedCategory = it }
+        )
         Spacer(modifier = Modifier.height(30.dp))
         // Recent y el historial
         Text(

@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.components.BottomBar
 import com.fedenintzel.petshopapp.presentation.components.BottomBarItem
+import com.fedenintzel.petshopapp.presentation.components.CategorySelector
 
 
 
@@ -38,8 +39,8 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    var selectedCategory by remember { mutableStateOf("Food") }
     val categories = listOf("Food", "Toys", "Accesories")
+    var selectedCategory by remember { mutableStateOf(categories.first()) }
 
     // Estado para el bottom sheet de ubicación
     var showLocationSheet by remember { mutableStateOf(false) }
@@ -101,28 +102,13 @@ fun HomeScreen(
                         )
                     }
                 }
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 12.dp)
-                ) {
-                    items(categories) { category ->
-                        val selected = category == selectedCategory
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 12.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(if (selected) Color(0xFF7140FD) else Color(0xFFF8F8F8))
-                                .clickable { selectedCategory = category }
-                                .padding(horizontal = 22.dp, vertical = 10.dp)
-                        ) {
-                            Text(
-                                category,
-                                color = if (selected) Color.White else Color(0xFFB3B1B0)
-                            )
-                        }
-                    }
-                }
+                Spacer(modifier = Modifier.height(2.dp))
+                CategorySelector(
+                    categories = categories,
+                    selectedCategory = selectedCategory,
+                    onCategorySelected = { selectedCategory = it },
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
+                )
             }
 
             // Best Seller header
