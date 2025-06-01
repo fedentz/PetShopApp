@@ -21,10 +21,12 @@ import com.fedenintzel.petshopapp.presentation.components.ProductCard
 import com.fedenintzel.petshopapp.presentation.components.Banner
 import androidx.compose.ui.draw.clip
 import com.fedenintzel.petshopapp.presentation.components.Header
+import androidx.navigation.NavController
 
 @JvmOverloads
 @Composable
 fun HomeScreen(
+    navController: NavController,
     viewModel: HomeViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -40,7 +42,9 @@ fun HomeScreen(
     ) {
         // Header - Navbar
         item {
-            Header()
+            Header(
+                onNotificationsClick = { navController.navigate("notifications") }
+            )
         }
         // Banner
         item {

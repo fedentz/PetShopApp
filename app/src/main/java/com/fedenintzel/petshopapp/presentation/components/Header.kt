@@ -28,7 +28,7 @@ fun Header(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            // Location
+            // "Location" y flecha
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "Location",
@@ -36,7 +36,7 @@ fun Header(
                     color = Color(0xFFB3B1B0)
                 )
                 IconButton(
-                    onClick = { },
+                    onClick = { /* selector de ubicación si lo deseas */ },
                     modifier = Modifier
                         .size(16.dp)
                         .padding(start = 2.dp)
@@ -47,6 +47,7 @@ fun Header(
                     )
                 }
             }
+            // Valor de la ubicación
             Text(
                 text = userName,
                 fontSize = 18.sp,
