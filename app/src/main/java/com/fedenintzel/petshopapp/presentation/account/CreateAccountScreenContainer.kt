@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 fun CreateAccountScreenContainer(
     createAccountViewModel: CreateAccountViewModel,
     onCreateAccountClick: (fullName: String, email: String, password: String, agreed: Boolean) -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    uiState: CreateAccountUiState
 ) {
     // 1) Leemos directamente el uiState que ya es un State<CreateAccountUiState>
     val createAccountUiState: StateFlow<CreateAccountUiState> = createAccountViewModel.uiState

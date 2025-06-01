@@ -9,6 +9,7 @@ import com.fedenintzel.petshopapp.data.remote.dto.RegisterRequest
 import com.fedenintzel.petshopapp.data.remote.dto.RegisterResponse
 import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordRequest
 import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordResponse
+import com.fedenintzel.petshopapp.domain.usecase.Result
 
 /**
  * Encapsula las llamadas a AuthApiService (login y register).

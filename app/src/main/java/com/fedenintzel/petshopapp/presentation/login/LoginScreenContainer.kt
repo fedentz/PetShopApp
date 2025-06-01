@@ -12,19 +12,27 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 fun LoginScreenContainer(
     loginViewModel: LoginViewModel,
     onLoginClick: (String, String) -> Unit,
-    onCreateAccountClick: () -> Unit
+    onCreateAccountClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    uiState: LoginUiState
 ) {
     // 1) Leemos directamente el uiState que ya es un State<LoginUiState>
     val loginUiState: LoginUiState = loginViewModel.uiState
 
     // 2) Llamamos a la pantalla composable pasando uiState y las actions
+//    LoginScreen(
+//        uiState = loginUiState,
+//        onLoginClick = { email, password ->
+//            onLoginClick(email, password)
+//        },
+//        onCreateAccountClick = {
+//            onCreateAccountClick()
+//        }
+//    )
     LoginScreen(
         uiState = loginUiState,
-        onLoginClick = { email, password ->
-            onLoginClick(email, password)
-        },
-        onCreateAccountClick = {
-            onCreateAccountClick()
-        }
+        onLoginClick = onLoginClick,
+        onCreateAccountClick = onCreateAccountClick,
+        onForgotPasswordClick = onForgotPasswordClick
     )
 }

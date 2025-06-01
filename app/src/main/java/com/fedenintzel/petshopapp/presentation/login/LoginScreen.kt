@@ -28,7 +28,8 @@ import com.fedenintzel.petshopapp.ui.theme.Poppins
 fun LoginScreen(
     uiState: LoginUiState,
     onLoginClick: (String, String) -> Unit,
-    onCreateAccountClick: () -> Unit
+    onCreateAccountClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -242,7 +243,8 @@ fun LoginScreenPreview() {
         LoginScreen(
             uiState = uiState,
             onLoginClick = { _, _ -> },
-            onCreateAccountClick = {}
+            onCreateAccountClick = {},
+            onForgotPasswordClick = onForgotPasswordClick
         )
     }
 }

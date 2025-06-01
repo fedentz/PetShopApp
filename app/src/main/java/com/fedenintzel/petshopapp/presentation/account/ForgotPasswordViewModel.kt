@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.data.repository.AuthRepository
 import com.fedenintzel.petshopapp.presentation.viewmodel.ForgotPasswordStep
 import com.fedenintzel.petshopapp.presentation.viewmodel.ForgotPasswordUiState
-import com.fedenintzel.petshopapp.presentation.viewmodel.Result
+import com.fedenintzel.petshopapp.domain.usecase.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +45,7 @@ class ForgotPasswordViewModel @Inject constructor(
     }
 
     /** Primer paso: enviar enlace de restablecimiento al email */
-    fun sendResetLink() {
+    fun sendResetLink(email1: String) {
         val currentEmail = _uiState.value.email.trim()
         if (currentEmail.isEmpty()) {
             _uiState.value = _uiState.value.copy(errorMessage = "El email no puede estar vacío")
@@ -55,7 +55,7 @@ class ForgotPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
             when (val resultado = authRepo.forgotPassword(currentEmail)) {
-                is Result.Success -> {
+                is Result.Success<*> -> {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         successMessage = "Revisa tu correo para restablecer contraseña",
@@ -68,6 +68,8 @@ class ForgotPasswordViewModel @Inject constructor(
                         errorMessage = resultado.message
                     )
                 }
+
+                Result.Loading -> TODO()
             }
         }
     }
@@ -92,7 +94,7 @@ class ForgotPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = state.copy(isLoading = true, errorMessage = null, successMessage = null)
             when (val resultado = authRepo.resetPassword(email, newPw)) {
-                is Result.Success -> {
+                is Result.Success<*> -> {
                     _uiState.value = state.copy(
                         isLoading = false,
                         successMessage = "Contraseña restablecida con éxito",
@@ -106,6 +108,8 @@ class ForgotPasswordViewModel @Inject constructor(
                         errorMessage = resultado.message
                     )
                 }
+
+                Result.Loading -> TODO()
             }
         }
     }
