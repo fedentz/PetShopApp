@@ -18,31 +18,103 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.R
 
+enum class NotificationTab { ACTIVITY, SELLER }
+
 @Composable
-fun NotificationsScreen(
-    onBack: () -> Unit
-) {
-    var selectedTab by remember { mutableStateOf("Activity") }
-    val notifications = List(4) {
-        NotificationItem(
-            imageRes = R.drawable.comidabanner,
+fun NotificationsScreen(onBack: () -> Unit) {
+    var selectedTab by remember { mutableStateOf(NotificationTab.ACTIVITY) }
+
+    // Notificaciones para "Activity"
+    val activityNotifications = listOf(
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
             title = "SALE 50%",
-            subtitle = "Check the details!"
+            subtitle = "Check the details!",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "SALE 50%",
+            subtitle = "Check the details!",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "SALE 50%",
+            subtitle = "Check the details!",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "SALE 50%",
+            subtitle = "Check the details!",
+            rightType = SellerNotification.RightType.Arrow
         )
-    }
+    )
+
+    // Notificaciones para "Seller Mode"
+    val sellerNotifications = listOf(
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "You Got New Order!",
+            subtitle = "Please arrange delivery",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.avatar_momon,
+            title = "Momon",
+            subtitle = "Liked your Product",
+            rightType = SellerNotification.RightType.Image(R.drawable.comidabanner)
+        ),
+        SellerNotification(
+            leftImage = R.drawable.avatar_ola,
+            title = "Ola",
+            subtitle = "Liked your Product",
+            rightType = SellerNotification.RightType.Image(R.drawable.comidabanner)
+        ),
+        SellerNotification(
+            leftImage = R.drawable.avatar_raul,
+            title = "Raul",
+            subtitle = "Liked your Product",
+            rightType = SellerNotification.RightType.Image(R.drawable.comidabanner)
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "You Got New Order!",
+            subtitle = "Please arrange delivery",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "You Got New Order!",
+            subtitle = "Please arrange delivery",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.comidabanner,
+            title = "You Got New Order!",
+            subtitle = "Please arrange delivery",
+            rightType = SellerNotification.RightType.Arrow
+        ),
+        SellerNotification(
+            leftImage = R.drawable.avatar_vito,
+            title = "Vito",
+            subtitle = "Liked your Product",
+            rightType = SellerNotification.RightType.Image(R.drawable.comidabanner)
+        )
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Header Row
+        // Encabezado: Flecha y título
         Box(
             Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp, start = 16.dp, end = 16.dp, bottom = 0.dp)
+                .padding(top = 24.dp, start = 16.dp, end = 16.dp)
         ) {
-            // Flecha back
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -53,12 +125,11 @@ fun NotificationsScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_back), // tu recurso de flecha
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = "Back",
                     modifier = Modifier.size(20.dp)
                 )
             }
-            // Titulo
             Text(
                 "Notification",
                 fontWeight = FontWeight.Bold,
@@ -67,7 +138,7 @@ fun NotificationsScreen(
             )
         }
 
-        // Toggle
+        // Toggle centrado
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -84,14 +155,14 @@ fun NotificationsScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(24.dp))
-                        .background(if (selectedTab == "Activity") Color(0xFF7140FD) else Color.Transparent)
-                        .clickable { selectedTab = "Activity" }
+                        .background(if (selectedTab == NotificationTab.ACTIVITY) Color(0xFF7140FD) else Color.Transparent)
+                        .clickable { selectedTab = NotificationTab.ACTIVITY }
                         .padding(horizontal = 24.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "Activity",
-                        color = if (selectedTab == "Activity") Color.White else Color(0xFFB3B1B0),
+                        color = if (selectedTab == NotificationTab.ACTIVITY) Color.White else Color(0xFFB3B1B0),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 15.sp
                     )
@@ -100,14 +171,14 @@ fun NotificationsScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(24.dp))
-                        .background(if (selectedTab == "Seller Mode") Color(0xFF7140FD) else Color.Transparent)
-                        .clickable { selectedTab = "Seller Mode" }
+                        .background(if (selectedTab == NotificationTab.SELLER) Color(0xFF7140FD) else Color.Transparent)
+                        .clickable { selectedTab = NotificationTab.SELLER }
                         .padding(horizontal = 24.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "Seller Mode",
-                        color = if (selectedTab == "Seller Mode") Color.White else Color(0xFFB3B1B0),
+                        color = if (selectedTab == NotificationTab.SELLER) Color.White else Color(0xFFB3B1B0),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 15.sp
                     )
@@ -119,31 +190,41 @@ fun NotificationsScreen(
 
         // Lista de notificaciones
         Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+            val notifications = when (selectedTab) {
+                NotificationTab.ACTIVITY -> activityNotifications
+                NotificationTab.SELLER -> sellerNotifications
+            }
             notifications.forEach { notif ->
-                NotificationRow(notif)
-                Spacer(modifier = Modifier.height(16.dp))
+                SellerNotificationRow(notif)
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }
 }
 
-data class NotificationItem(
-    val imageRes: Int,
+// Reutilizable para ambas pestañas
+data class SellerNotification(
+    val leftImage: Int,
     val title: String,
-    val subtitle: String
-)
+    val subtitle: String,
+    val rightType: RightType
+) {
+    sealed class RightType {
+        object Arrow : RightType()
+        data class Image(val img: Int) : RightType()
+    }
+}
 
 @Composable
-fun NotificationRow(item: NotificationItem) {
+fun SellerNotificationRow(notification: SellerNotification) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Imagen
         Image(
-            painter = painterResource(id = item.imageRes),
+            painter = painterResource(id = notification.leftImage),
             contentDescription = null,
             modifier = Modifier
                 .size(48.dp)
@@ -151,27 +232,40 @@ fun NotificationRow(item: NotificationItem) {
                 .background(Color(0xFFF5F5F5))
         )
         Spacer(modifier = Modifier.width(12.dp))
-        // Título y subtítulo
         Column(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                item.title,
+                notification.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
-                item.subtitle,
+                notification.subtitle,
                 color = Color(0xFFB3B1B0),
                 fontSize = 14.sp
             )
         }
-        // Flecha
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow_right),
-            contentDescription = "Details",
-            modifier = Modifier.size(20.dp)
-        )
+        Spacer(modifier = Modifier.width(12.dp))
+        when (notification.rightType) {
+            is SellerNotification.RightType.Arrow -> {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_right),
+                    contentDescription = "Details",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            is SellerNotification.RightType.Image -> {
+                Image(
+                    painter = painterResource(id = notification.rightType.img),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFF5F5F5))
+                )
+            }
+        }
     }
 }
 
