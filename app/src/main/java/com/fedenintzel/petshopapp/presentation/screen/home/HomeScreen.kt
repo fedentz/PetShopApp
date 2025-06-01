@@ -24,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import com.fedenintzel.petshopapp.presentation.components.Header
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
+import com.fedenintzel.petshopapp.presentation.components.BottomBar
+import com.fedenintzel.petshopapp.presentation.components.BottomBarItem
 
 
 
@@ -43,148 +45,168 @@ fun HomeScreen(
     var showLocationSheet by remember { mutableStateOf(false) }
     val locationSheetState = rememberModalBottomSheetState()
 
-    LazyColumn(
-        modifier = Modifier
+    Box(
+        Modifier
             .fillMaxSize()
-            .background(Color.White),
-        contentPadding = PaddingValues(bottom = 16.dp)
+            .background(Color.White)
     ) {
-        // Header - Navbar
-        item {
-            Header(
-                onLocationClick = { showLocationSheet = true },
-                onNotificationsClick = { navController.navigate("notifications") },
-                onSearchClick = { navController.navigate("search") }
-            )
-            LocationSheet(
-                show = showLocationSheet,
-                onDismiss = { showLocationSheet = false }
-            )
-        }
-        // Banner
-        item {
-            Banner(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp)
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-        }
-
-        // Categorías
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Category",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                TextButton(onClick = { /* Ver todas */ }) {
-                    Text(
-                        "View All",
-                        color = Color(0xFF7140FD)
-                    )
-                }
-            }
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp)
-            ) {
-                items(categories) { category ->
-                    val selected = category == selectedCategory
-                    Box(
-                        modifier = Modifier
-                            .padding(end = 12.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(if (selected) Color(0xFF7140FD) else Color(0xFFF8F8F8))
-                            .clickable { selectedCategory = category }
-                            .padding(horizontal = 22.dp, vertical = 10.dp)
-                    ) {
-                        Text(
-                            category,
-                            color = if (selected) Color.White else Color(0xFFB3B1B0)
-                        )
-                    }
-                }
-            }
-        }
-
-        // Best Seller header
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Best Seller",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                TextButton(onClick = { /* Ver todas */ }) {
-                    Text(
-                        "View All",
-                        color = Color(0xFF7140FD)
-                    )
-                }
-            }
-        }
-
-        // Productos
-        if (uiState.isLoading) {
+        // Contenido principal con espacio inferior para el BottomBar
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(bottom = 72.dp), // espacio para el BottomBar
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            // Header - Navbar
             item {
-                Box(
+                Header(
+                    onLocationClick = { showLocationSheet = true },
+                    onNotificationsClick = { navController.navigate("notifications") },
+                    onSearchClick = { navController.navigate("search") }
+                )
+                LocationSheet(
+                    show = showLocationSheet,
+                    onDismiss = { showLocationSheet = false }
+                )
+            }
+            // Banner
+            item {
+                Banner(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(40.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        } else if (uiState.error != null) {
-            item {
-                Text(
-                    text = uiState.error ?: "Error",
-                    color = Color.Red,
-                    modifier = Modifier.padding(32.dp)
+                        .padding(horizontal = 18.dp)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
             }
-        } else {
-            items(uiState.products.chunked(2)) { rowProducts ->
+
+            // Categorías
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 18.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        .padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    rowProducts.forEach { product ->
-                        ProductCard(
-                            name = product.title,
-                            price = product.price,
-                            imageUrl = product.thumbnail,
-                            onAddClick = {
-                                viewModel.addToCart(product)
-                            },
-                            onCardClick = { /* TODO: Navegar a detalle */ },
-                            modifier = Modifier.weight(1f)
+                    Text(
+                        "Category",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    TextButton(onClick = { /* Ver todas */ }) {
+                        Text(
+                            "View All",
+                            color = Color(0xFF7140FD)
                         )
                     }
-                    // Si la fila tiene solo un producto, agregamos un Spacer para el grid
-                    if (rowProducts.size < 2) {
-                        Spacer(modifier = Modifier.weight(1f))
+                }
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 12.dp)
+                ) {
+                    items(categories) { category ->
+                        val selected = category == selectedCategory
+                        Box(
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(if (selected) Color(0xFF7140FD) else Color(0xFFF8F8F8))
+                                .clickable { selectedCategory = category }
+                                .padding(horizontal = 22.dp, vertical = 10.dp)
+                        ) {
+                            Text(
+                                category,
+                                color = if (selected) Color.White else Color(0xFFB3B1B0)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Best Seller header
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Best Seller",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    TextButton(onClick = { /* Ver todas */ }) {
+                        Text(
+                            "View All",
+                            color = Color(0xFF7140FD)
+                        )
+                    }
+                }
+            }
+
+            // Productos
+            if (uiState.isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else if (uiState.error != null) {
+                item {
+                    Text(
+                        text = uiState.error ?: "Error",
+                        color = Color.Red,
+                        modifier = Modifier.padding(32.dp)
+                    )
+                }
+            } else {
+                items(uiState.products.chunked(2)) { rowProducts ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp, vertical = 6.dp),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                    ) {
+                        rowProducts.forEach { product ->
+                            ProductCard(
+                                name = product.title,
+                                price = product.price,
+                                imageUrl = product.thumbnail,
+                                onAddClick = {
+                                    viewModel.addToCart(product)
+                                },
+                                onCardClick = { /* TODO: Navegar a detalle */ },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        // Si la fila tiene solo un producto, agregamos un Spacer para el grid
+                        if (rowProducts.size < 2) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
             }
         }
+
+        // BottomBar fijo abajo
+        BottomBar(
+            selected = BottomBarItem.HOME,
+            onHomeClick = { /* ya estás en Home */ },
+            onTimeClick = { /* vacío */ },
+            onBagClick = { /* a futuro */ },
+            onProfileClick = { /* a futuro */ },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .height(64.dp)
+        )
     }
 }
