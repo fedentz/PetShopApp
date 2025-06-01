@@ -32,9 +32,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    fun getProductById(productId: Int): Product? {
+        return uiState.value.products.find { it.id == productId }
+    }
+
     fun addToCart(product: Product) {
-        // Implementa aquí la lógica para agregar el producto al carrito
-        // Por ejemplo, usando un repository o actualizando un StateFlow/LiveData
+        // TO-DO
     }
 }
 

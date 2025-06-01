@@ -112,7 +112,7 @@ fun BestSellerScreen(
                                     price = product.price,
                                     imageUrl = product.thumbnail,
                                     onAddClick = { viewModel.addToCart(product) },
-                                    onCardClick = { },
+                                    onCardClick = { navController.navigate("product_detail/${product.id}") },
                                     modifier = Modifier.weight(1f)
                                 )
                             }

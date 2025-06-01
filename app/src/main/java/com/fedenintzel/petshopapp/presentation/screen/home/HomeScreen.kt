@@ -186,7 +186,7 @@ fun HomeScreen(
                                 onAddClick = {
                                     viewModel.addToCart(product)
                                 },
-                                onCardClick = { /* TODO: Navegar a detalle */ },
+                                onCardClick = { navController.navigate("product_detail/${product.id}") },
                                 modifier = Modifier.weight(1f)
                             )
                         }
