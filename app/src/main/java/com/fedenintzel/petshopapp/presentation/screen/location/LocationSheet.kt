@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.R
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,6 +23,7 @@ fun LocationSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     if (show) {
         ModalBottomSheet(
@@ -47,6 +49,7 @@ fun LocationSheet(
             Column(
                 Modifier
                     .fillMaxWidth()
+                    .heightIn(min = screenHeight * 0.85f)
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
@@ -111,4 +114,3 @@ fun LocationSheet(
         }
     }
 }
-

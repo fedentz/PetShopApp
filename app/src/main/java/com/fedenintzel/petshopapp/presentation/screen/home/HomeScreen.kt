@@ -1,12 +1,9 @@
 package com.fedenintzel.petshopapp.presentation.screen.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,15 +16,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
 import com.fedenintzel.petshopapp.presentation.components.Banner
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import com.fedenintzel.petshopapp.presentation.components.Header
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.components.BottomBar
 import com.fedenintzel.petshopapp.presentation.components.BottomBarItem
 import com.fedenintzel.petshopapp.presentation.components.CategorySelector
-
+import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,22 +36,18 @@ fun HomeScreen(
 
     val categories = listOf("Food", "Toys", "Accesories")
     var selectedCategory by remember { mutableStateOf(categories.first()) }
-
-    // Estado para el bottom sheet de ubicación
     var showLocationSheet by remember { mutableStateOf(false) }
-    val locationSheetState = rememberModalBottomSheetState()
 
     Box(
         Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Contenido principal con espacio inferior para el BottomBar
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(bottom = 72.dp), // espacio para el BottomBar
+                .padding(bottom = 72.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             // Header - Navbar

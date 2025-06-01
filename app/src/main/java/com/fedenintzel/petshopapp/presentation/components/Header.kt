@@ -48,6 +48,7 @@ fun Header(
                         .padding(start = 2.dp)
                 )
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = userName,
                 fontSize = 18.sp,

@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductDetailViewModel
 
 @Composable
 fun ProductDetailScreen(

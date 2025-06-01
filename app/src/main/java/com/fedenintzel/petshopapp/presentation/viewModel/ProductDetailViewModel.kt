@@ -1,4 +1,4 @@
-package com.fedenintzel.petshopapp.presentation.screen.detail
+package com.fedenintzel.petshopapp.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

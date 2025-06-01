@@ -18,10 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
-import com.fedenintzel.petshopapp.presentation.screen.home.HomeViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
 import com.fedenintzel.petshopapp.R
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.Image
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
