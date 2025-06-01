@@ -1,29 +1,36 @@
 package com.fedenintzel.petshopapp.data.repository
 
 import com.fedenintzel.petshopapp.data.remote.AuthApiService
-import com.fedenintzel.petshopapp.data.remote.LoginRequest
-import com.fedenintzel.petshopapp.data.remote.LoginResponse
-import java.io.IOException
+import com.fedenintzel.petshopapp.data.remote.dto.LoginRequest
+import com.fedenintzel.petshopapp.data.remote.dto.LoginResponse
+import com.fedenintzel.petshopapp.data.remote.dto.RegisterRequest
+import com.fedenintzel.petshopapp.data.remote.dto.RegisterResponse
 
-
-sealed class Result<out T> {
-    data class Success<out T>(val data: T): Result<T>()
-    data class Error(val message: String): Result<Nothing>()
-}
-
+/**
+ * Encapsula las llamadas a AuthApiService (login y register).
+ */
 class AuthRepository(
     private val api: AuthApiService
 ) {
-    suspend fun login(username: String, password: String): Result<LoginResponse> {
-        return try {
-            val response = api.login(LoginRequest(username, password))
-            Result.Success(response)
-        } catch (io: IOException) {
-            // error de red
-            Result.Error("Error de red")
-        } catch (e: Exception) {
-            // error genérico (400, 500, parsing, etc.)
-            Result.Error(e.localizedMessage ?: "Error desconocido")
-        }
+    suspend fun login(username: String, password: String): LoginResponse {
+        val request = LoginRequest(username = username, password = password)
+        return api.login(request)
+    }
+
+    suspend fun register(
+        firstName: String,
+        lastName: String,
+        username: String,
+        email: String,
+        password: String
+    ): RegisterResponse {
+        val request = RegisterRequest(
+            firstName = firstName,
+            lastName = lastName,
+            username = username,
+            email = email,
+            password = password
+        )
+        return api.register(request)
     }
 }
