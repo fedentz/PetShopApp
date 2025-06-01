@@ -244,7 +244,7 @@ fun LoginScreenPreview() {
             uiState = uiState,
             onLoginClick = { _, _ -> },
             onCreateAccountClick = {},
-            onForgotPasswordClick = onForgotPasswordClick
+            onForgotPasswordClick = {}
         )
     }
 }

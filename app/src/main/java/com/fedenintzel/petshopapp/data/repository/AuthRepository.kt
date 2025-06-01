@@ -10,11 +10,12 @@ import com.fedenintzel.petshopapp.data.remote.dto.RegisterResponse
 import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordRequest
 import com.fedenintzel.petshopapp.data.remote.dto.ResetPasswordResponse
 import com.fedenintzel.petshopapp.domain.usecase.Result
+import javax.inject.Inject
 
 /**
  * Encapsula las llamadas a AuthApiService (login y register).
  */
-class AuthRepository(
+class AuthRepository @Inject constructor(
     private val api: AuthApiService
 ) {
     suspend fun login(username: String, password: String): LoginResponse {
