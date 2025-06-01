@@ -13,10 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.R
+import androidx.compose.foundation.clickable
 
 @Composable
 fun Header(
     userName: String = "Jebres, Surakarta",
+    onLocationClick: () -> Unit = {},
     onSearchClick: () -> Unit = {},
     onNotificationsClick: () -> Unit = {}
 ) {
@@ -27,27 +29,25 @@ fun Header(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Column{
             // "Location" y flecha
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable { onLocationClick() }
+            ) {
                 Text(
                     text = "Location",
                     fontSize = 12.sp,
                     color = Color(0xFFB3B1B0)
                 )
-                IconButton(
-                    onClick = { /* selector de ubicación si lo deseas */ },
+                Image(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    contentDescription = "Expand location",
                     modifier = Modifier
                         .size(16.dp)
                         .padding(start = 2.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow_down),
-                        contentDescription = "Expand location"
-                    )
-                }
+                )
             }
-            // Valor de la ubicación
             Text(
                 text = userName,
                 fontSize = 18.sp,

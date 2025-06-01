@@ -20,9 +20,14 @@ import androidx.compose.runtime.collectAsState
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
 import com.fedenintzel.petshopapp.presentation.components.Banner
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import com.fedenintzel.petshopapp.presentation.components.Header
 import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @JvmOverloads
 @Composable
 fun HomeScreen(
@@ -34,6 +39,10 @@ fun HomeScreen(
     var selectedCategory by remember { mutableStateOf("Food") }
     val categories = listOf("Food", "Toys", "Accesories")
 
+    // Estado para el bottom sheet de ubicación
+    var showLocationSheet by remember { mutableStateOf(false) }
+    val locationSheetState = rememberModalBottomSheetState()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -43,7 +52,12 @@ fun HomeScreen(
         // Header - Navbar
         item {
             Header(
+                onLocationClick = { showLocationSheet = true },
                 onNotificationsClick = { navController.navigate("notifications") }
+            )
+            LocationSheet(
+                show = showLocationSheet,
+                onDismiss = { showLocationSheet = false }
             )
         }
         // Banner
