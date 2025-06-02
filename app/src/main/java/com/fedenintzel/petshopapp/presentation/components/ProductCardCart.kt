@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
  * @param onCardClick Acción al tocar la card
  */
 @Composable
-fun ProductCard(
+fun ProductCardCart(
     name: String,
     price: Double,
     imageUrl: String? = null,
@@ -132,7 +132,7 @@ fun ProductCard(
 @Preview(showBackground = true)
 @Composable
 fun ProductCardPreview() {
-    ProductCard(
+    ProductCardCart(
         name = "RC Kitten",
         price = 20.99,
         //imageResId = R.drawable.product_image,

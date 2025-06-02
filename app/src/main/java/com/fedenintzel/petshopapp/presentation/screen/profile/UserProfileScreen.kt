@@ -88,7 +88,7 @@ fun UserProfileScreen() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(favoriteProducts) { product ->
-                        ProductCard(
+                        ProductCardCart(
                             name = product.name,
                             price = product.price,
                             imageResId = product.imageResId,
