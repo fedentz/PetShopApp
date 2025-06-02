@@ -77,7 +77,7 @@ fun SettingsPageScreen(
                             title = item.title,
                             icon = item.iconResId,
                             endContent = item.trailingContent,
-                            onClick = { item.onClick }
+                            onClick = { onItemClick(item) }
                         )
                     }
                 }
