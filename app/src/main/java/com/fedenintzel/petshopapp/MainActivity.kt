@@ -17,6 +17,10 @@ import com.fedenintzel.petshopapp.presentation.account.CreateAccountViewModel
 import com.fedenintzel.petshopapp.presentation.account.ForgotPasswordScreenContainer
 import com.fedenintzel.petshopapp.presentation.account.ForgotPasswordViewModel
 import com.fedenintzel.petshopapp.presentation.login.LoginScreenContainer
+import com.fedenintzel.petshopapp.presentation.screen.OnBoardingScreen
+import com.fedenintzel.petshopapp.presentation.screen.home.HomeScreen
+import com.fedenintzel.petshopapp.presentation.screen.home.HomeScreenContainer
+import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ForgotPasswordUiState
@@ -29,10 +33,26 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : ComponentActivity() {
 
     private object Destinations {
+
+        // profile
+        const val ONBOARDING = "onboarding"
         const val LOGIN = "login"
         const val CREATE_ACCOUNT = "create_account"
         const val FORGOT_PASSWORD = "forgot_password"
+
+        //home
+        const val HOME = "home"
+
+        // cart
+        const val CART = "cart"
+
+        // payment
+        const val ADD_NEW_PAYMENT = "add_new_payment"
+
+        // settings
+        const val SETTINGS = "settings"
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +71,9 @@ class MainActivity : ComponentActivity() {
         // --- 3) Hacemos factories para los ViewModels que no inyectaremos con Hilt ---
         val loginFactory = LoginViewModel.Factory(authRepo)
         val createAccountFactory = CreateAccountViewModel.Factory(authRepo)
+        val homeViewModelFactory = HomeViewModel.Factory(authRepo)
+
+
         // Para ForgotPassword usaremos hiltViewModel(), así que no necesita Factory manual.
 
         setContent {
@@ -59,8 +82,19 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = Destinations.LOGIN
+                    startDestination = Destinations.ONBOARDING
                 ) {
+                    // Onboarding
+                    composable(Destinations.ONBOARDING) {
+                        OnBoardingScreen(
+                            onContinue = {
+                                navController.navigate(Destinations.HOME) {
+                                    popUpTo(Destinations.ONBOARDING) { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+
                     // ─── Pantalla de Login ───
                     composable(Destinations.LOGIN) {
                         //-- Instanciamos LoginViewModel con su Factory:
@@ -155,6 +189,22 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+
+                    // HOME
+                    composable(Destinations.HOME) {
+                        val homeViewModel = ViewModelProvider(
+                            this@MainActivity,
+                            homeViewModelFactory
+                        ).get(HomeViewModel::class.java)
+
+                        HomeScreenContainer(
+                            navController = navController,
+                            homeViewModel = homeViewModel
+                        )
+                    }
+
+
+
                 }
             }
         }

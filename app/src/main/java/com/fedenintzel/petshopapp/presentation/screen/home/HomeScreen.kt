@@ -22,6 +22,8 @@ import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.components.BottomBar
 import com.fedenintzel.petshopapp.presentation.components.BottomBarItem
 import com.fedenintzel.petshopapp.presentation.components.CategorySelector
+import com.fedenintzel.petshopapp.data.model.Product
+import com.fedenintzel.petshopapp.presentation.viewModel.HomeUiState
 import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
 
 
@@ -30,9 +32,11 @@ import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel()
+    uiState: HomeUiState,
+    onAddToCart: (Product) -> Unit,
+    onProductClick: (Int) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+   // val uiState by viewModel.uiState.collectAsState()
 
     val categories = listOf("Food", "Toys", "Accesories")
     var selectedCategory by remember { mutableStateOf(categories.first()) }
@@ -161,7 +165,7 @@ fun HomeScreen(
                                 price = product.price,
                                 imageUrl = product.thumbnail,
                                 onAddClick = {
-                                    viewModel.addToCart(product)
+                                    onAddToCart(product)
                                 },
                                 onCardClick = { navController.navigate("product_detail/${product.id}") },
                                 modifier = Modifier.weight(1f)

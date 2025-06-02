@@ -1,9 +1,12 @@
 package com.fedenintzel.petshopapp.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.data.model.Product
 import com.fedenintzel.petshopapp.data.remote.RetrofitInstance
+import com.fedenintzel.petshopapp.data.repository.AuthRepository
+import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -14,7 +17,7 @@ data class HomeUiState(
     val error: String? = null
 )
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(authRepository1: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
 
@@ -39,5 +42,16 @@ class HomeViewModel : ViewModel() {
     fun addToCart(product: Product) {
         // TO-DO
     }
+
+    class Factory(private val repo: AuthRepository) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return HomeViewModel(repo) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
 }
+
 
