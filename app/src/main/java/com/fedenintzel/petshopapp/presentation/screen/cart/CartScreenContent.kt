@@ -1,14 +1,16 @@
 package com.fedenintzel.petshopapp.presentation.screen.cart
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.presentation.components.CartItemCard
@@ -16,13 +18,17 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.ui.platform.LocalDensity
 
 @Composable
 fun CartScreenContent(
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    var itemToRemove by remember { mutableStateOf<Int?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when {
@@ -50,17 +56,50 @@ fun CartScreenContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
                 ) {
-                    items(cart.products) { product ->
-                        CartItemCard(
-                            imageUrl = product.thumbnail,
-                            title = product.title,
-                            subtitle = "Qty: ${product.quantity}",
-                            price = product.price
+                    items(cart.products, key = { it.id }) { product ->
+                        val density = LocalDensity.current
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            positionalThreshold = {
+                                with(density) { 100.dp.toPx() }
+                            },
+                            confirmValueChange = { value ->
+                                if (value == SwipeToDismissBoxValue.EndToStart) {
+                                    itemToRemove = product.id
+                                    false // no eliminar todavía
+                                } else false
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            backgroundContent = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                                        .background(Color(0xFFF8F8F8), shape = RoundedCornerShape(16.dp)),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = com.fedenintzel.petshopapp.R.drawable.ic_trash),
+                                        contentDescription = "Delete",
+                                        tint = Color.Red,
+                                        modifier = Modifier.padding(end = 24.dp)
+                                    )
+                                }
+                            },
+                            content = {
+                                CartItemCard(
+                                    imageUrl = product.thumbnail,
+                                    title = product.title,
+                                    subtitle = "Qty: ${product.quantity}",
+                                    price = product.price
+                                )
+                            }
                         )
                     }
                 }
 
-                // Panel inferior fijo
                 Surface(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -145,6 +184,26 @@ fun CartScreenContent(
                 }
             }
         }
+
+        if (itemToRemove != null) {
+            AlertDialog(
+                onDismissRequest = { itemToRemove = null },
+                confirmButton = {
+                    TextButton(onClick = {
+                        itemToRemove?.let { viewModel.removeFromCart(it) }
+                        itemToRemove = null
+                    }) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { itemToRemove = null }) {
+                        Text("Cancel")
+                    }
+                },
+                title = { Text("Delete product?") },
+                text = { Text("Remove product from Cart?") }
+            )
+        }
     }
 }
-

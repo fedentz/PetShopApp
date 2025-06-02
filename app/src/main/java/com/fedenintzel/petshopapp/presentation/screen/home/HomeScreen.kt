@@ -12,46 +12,50 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.collectAsState
-import com.fedenintzel.petshopapp.presentation.components.ProductCard
-import com.fedenintzel.petshopapp.presentation.components.Banner
-import com.fedenintzel.petshopapp.presentation.components.Header
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
-import com.fedenintzel.petshopapp.presentation.components.BottomBar
-import com.fedenintzel.petshopapp.presentation.components.BottomBarItem
-import com.fedenintzel.petshopapp.presentation.components.CategorySelector
-import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @JvmOverloads
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: ProductsViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val state by viewModel.state.collectAsState()
+    val showSnackbar by cartViewModel.showSnackbar
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    val categories = listOf("Food", "Toys", "Accesories")
-    var selectedCategory by remember { mutableStateOf(categories.first()) }
-    var showLocationSheet by remember { mutableStateOf(false) }
+    LaunchedEffect(showSnackbar) {
+        if (showSnackbar) {
+            snackbarHostState.showSnackbar("Producto agregado al carrito")
+            cartViewModel.clearSnackbar()
+        }
+    }
 
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        LazyColumn(
-            modifier = Modifier
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        val categories = listOf("Food", "Toys", "Accesories")
+        var selectedCategory by remember { mutableStateOf(categories.first()) }
+        var showLocationSheet by remember { mutableStateOf(false) }
+
+        Box(
+            Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(bottom = 72.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
+                .padding(paddingValues)
+
         ) {
-            // Header - Navbar
-            item {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 72.dp)
+            ) {
                 Header(
                     onLocationClick = { showLocationSheet = true },
                     onNotificationsClick = { navController.navigate("notifications") },
@@ -61,19 +65,14 @@ fun HomeScreen(
                     show = showLocationSheet,
                     onDismiss = { showLocationSheet = false }
                 )
-            }
-            // Banner
-            item {
+
                 Banner(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 18.dp)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-            }
 
-            // Categorías
-            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,10 +86,7 @@ fun HomeScreen(
                         fontWeight = FontWeight.SemiBold
                     )
                     TextButton(onClick = { /* Ver todas */ }) {
-                        Text(
-                            "View All",
-                            color = Color(0xFF7140FD)
-                        )
+                        Text("View All", color = Color(0xFF7140FD))
                     }
                 }
                 Spacer(modifier = Modifier.height(2.dp))
@@ -100,10 +96,7 @@ fun HomeScreen(
                     onCategorySelected = { selectedCategory = it },
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
                 )
-            }
 
-            // Best Seller header
-            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,20 +109,12 @@ fun HomeScreen(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    TextButton(
-                        onClick = { navController.navigate("best_seller")  }
-                        ) {
-                        Text(
-                            "View All",
-                            color = Color(0xFF7140FD)
-                        )
+                    TextButton(onClick = { navController.navigate("best_seller") }) {
+                        Text("View All", color = Color(0xFF7140FD))
                     }
                 }
-            }
 
-            // Productos
-            if (uiState.isLoading) {
-                item {
+                if (state.isLoading) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -138,54 +123,58 @@ fun HomeScreen(
                     ) {
                         CircularProgressIndicator()
                     }
-                }
-            } else if (uiState.error != null) {
-                item {
+                } else if (state.error != null) {
                     Text(
-                        text = uiState.error ?: "Error",
+                        text = state.error ?: "Error",
                         color = Color.Red,
                         modifier = Modifier.padding(32.dp)
                     )
-                }
-            } else {
-                items(uiState.products.chunked(2)) { rowProducts ->
-                    Row(
+                } else {
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 18.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                            .fillMaxSize()
+                            .padding(top = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = 96.dp)
                     ) {
-                        rowProducts.forEach { product ->
-                            ProductCard(
-                                name = product.title,
-                                price = product.price,
-                                imageUrl = product.thumbnail,
-                                onAddClick = {
-                                    viewModel.addToCart(product)
-                                },
-                                onCardClick = { navController.navigate("product_detail/${product.id}") },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        // Si la fila tiene solo un producto, agregamos un Spacer para el grid
-                        if (rowProducts.size < 2) {
-                            Spacer(modifier = Modifier.weight(1f))
+                        items(state.products.chunked(2)) { rowProducts ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 18.dp, vertical = 6.dp),
+                                horizontalArrangement = Arrangement.spacedBy(14.dp)
+                            ) {
+                                rowProducts.forEach { product ->
+                                    ProductCard(
+                                        name = product.title,
+                                        price = product.price,
+                                        imageUrl = product.thumbnail,
+                                        onAddClick = { cartViewModel.addToCart(product) },
+                                        onCardClick = {
+                                            navController.navigate("product_detail/${product.id}")
+                                        },
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
+                                if (rowProducts.size < 2) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // BottomBar fijo abajo
-        BottomBar(
-            selected = BottomBarItem.HOME,
-            onHomeClick = { /* ya estás en Home */ },
-            onTimeClick = { /* vacío */ },
-            onBagClick = { /* a futuro */ },
-            onProfileClick = { /* a futuro */ },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .height(64.dp)
-        )
+            BottomBar(
+                selected = BottomBarItem.HOME,
+                onHomeClick = { /* ya estás en Home */ },
+                onTimeClick = { /* a futuro */ },
+                onBagClick = { /* a futuro */ },
+                onProfileClick = { /* a futuro */ },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .height(64.dp)
+            )
+        }
     }
 }

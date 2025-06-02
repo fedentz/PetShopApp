@@ -96,7 +96,7 @@ fun SellerProfileScreen() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(sellerProducts) { product ->
-                            ProductCard(
+                            ProductCardCart(
                                 name = product.name,
                                 price = product.price,
                                 imageResId = product.imageResId,

@@ -1,16 +1,22 @@
-package com.fedenintzel.petshopapp.presentation.viewModel
+package com.fedenintzel.petshopapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fedenintzel.petshopapp.data.remote.ProductsApi
-import com.fedenintzel.petshopapp.data.model.Product
+import com.fedenintzel.petshopapp.domain.model.Product
+import com.fedenintzel.petshopapp.domain.repository.FavoritesRepository
+import com.fedenintzel.petshopapp.domain.usecase.GetProductByIdUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class ProductDetailViewModel : ViewModel() {
+@HiltViewModel
+class ProductDetailViewModel @Inject constructor(
+    private val getProductByIdUseCase: GetProductByIdUseCase,
+    private val favoritesRepository: FavoritesRepository
+) : ViewModel() {
+
     private val _product = MutableStateFlow<Product?>(null)
     val product: StateFlow<Product?> = _product
 
@@ -20,27 +26,31 @@ class ProductDetailViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    // Retrofit instance (puedes mover a singleton si prefieres)
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://dummyjson.com/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val api = retrofit.create(ProductsApi::class.java)
+    private val _isFavorite = MutableStateFlow(false)
+    val isFavorite: StateFlow<Boolean> = _isFavorite
 
     fun fetchProductById(productId: Int) {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             try {
-                val result = api.getProductById(productId)
+                val result = getProductByIdUseCase(productId)
                 _product.value = result
+                _isFavorite.value = favoritesRepository.isFavorite(productId)
             } catch (e: Exception) {
-                _error.value = "Producto no encontrado"
+                _error.value = "Error al obtener producto: ${e.message}"
                 _product.value = null
             } finally {
                 _isLoading.value = false
             }
         }
     }
-}
 
+    fun toggleFavorite() {
+        val product = _product.value ?: return
+        viewModelScope.launch {
+            favoritesRepository.toggleFavorite(product)
+            _isFavorite.value = favoritesRepository.isFavorite(product.id)
+        }
+    }
+}

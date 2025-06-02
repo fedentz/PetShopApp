@@ -16,18 +16,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.fedenintzel.petshopapp.presentation.components.ProductCard
-import com.fedenintzel.petshopapp.presentation.viewModel.HomeViewModel
+import com.fedenintzel.petshopapp.presentation.components.ProductCardCart
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BestSellerScreen(
     navController: NavController,
-    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ProductsViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.state.collectAsState()
 
     Box(
         Modifier
@@ -105,7 +106,7 @@ fun BestSellerScreen(
                             horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             rowProducts.forEach { product ->
-                                ProductCard(
+                                ProductCardCart(
                                     name = product.title,
                                     price = product.price,
                                     imageUrl = product.thumbnail,
