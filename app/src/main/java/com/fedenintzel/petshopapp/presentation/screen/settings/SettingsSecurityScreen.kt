@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
 import com.fedenintzel.petshopapp.domain.model.settings.SettingsCategory
 import com.fedenintzel.petshopapp.domain.model.settings.SettingsItem
@@ -45,6 +46,7 @@ import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
 fun SettingsSecurityScreen(
+    navController: NavController,
     categories: List<SettingsCategory> = FakeSettingsDataProvider.getSettingsSecurity(),
     onBackClick: () -> Unit,
     onItemClick: (SettingsItem) -> Unit
@@ -73,8 +75,7 @@ fun SettingsSecurityScreen(
                             title = item.title,
                             icon = item.iconResId,
                             endContent = item.trailingContent,
-                            onClick = { item.onClick }
-                        )
+                            onClick = { onItemClick(item) }                        )
                     }
                 }
             }
@@ -82,13 +83,3 @@ fun SettingsSecurityScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SettingsSecurityScreenPreview() {
-    val fakeData = FakeSettingsDataProvider.getSettingsCategories()
-    SettingsSecurityScreen(
-
-        onBackClick = {},
-        onItemClick = {}
-    )
-}

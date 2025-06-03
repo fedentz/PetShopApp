@@ -15,7 +15,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.fedenintzel.petshopapp.navigation.settings.SettingsNavGraph
+import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
+import com.fedenintzel.petshopapp.navigation.Destinations.ADD_NEW_PAYMENT_METHOD
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_ACCOUNT_SCREEN
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_FAQ_SCREEN
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_NOTIFICATIONS_SCREEN
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_PRIVACY_SCREEN
+import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_SECURITY_SCREEN
 import com.fedenintzel.petshopapp.presentation.account.CreateAccountScreenContainer
 import com.fedenintzel.petshopapp.presentation.account.CreateAccountViewModel
 import com.fedenintzel.petshopapp.presentation.account.ForgotPasswordScreenContainer
@@ -31,9 +38,20 @@ import com.fedenintzel.petshopapp.presentation.screen.cart.CartScreenContent
 import com.fedenintzel.petshopapp.presentation.screen.detail.ProductDetailScreen
 import com.fedenintzel.petshopapp.presentation.screen.home.HomeScreen
 import com.fedenintzel.petshopapp.presentation.screen.notifications.NotificationsScreen
+import com.fedenintzel.petshopapp.presentation.screen.payment.AddNewPaymentScreen
+import com.fedenintzel.petshopapp.presentation.screen.payment.ChoosePaymentMethodScreen
+import com.fedenintzel.petshopapp.presentation.screen.payment.PaymentSuccessScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.SellerProfileScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.UserProfileScreen
 import com.fedenintzel.petshopapp.presentation.screen.search.SearchScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsAccountScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsChangeEmailScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsChangePasswordScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsFaqScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsNotificationsScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPrivacyScreen
+import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsSecurityScreen
 import kotlinx.coroutines.launch
 
 
@@ -53,9 +71,10 @@ fun NavigationWrapper(
                 onSettingsClick = {
                     scope.launch {
                         drawerState.close()
-                        navController.navigate(Destinations.SETTINGS)
+                        navController.navigate(SETTINGS)
                     }
-                }
+                },
+                navController = navController
             )
         }
     )
@@ -176,15 +195,29 @@ fun NavigationWrapper(
 
 
             // Settings
-            composable(Destinations.SETTINGS) {
-                SettingsNavGraph(
-                    onBackClick = { navController.popBackStack() }
-                )
+            composable(SETTINGS) {
+                SettingsPageScreen(
+                    categories = FakeSettingsDataProvider.getSettingsCategories(),
+                    onBackClick = { navController.popBackStack() },
+                    onItemClick = { item ->
+                        val route = when (item.title) {
+                            "Account" -> SETTINGS_ACCOUNT_SCREEN
+                            "Notification" -> SETTINGS_NOTIFICATIONS_SCREEN
+                            "Privacy" -> SETTINGS_PRIVACY_SCREEN
+                            "Security" -> SETTINGS_SECURITY_SCREEN
+                            "FAQ" -> SETTINGS_FAQ_SCREEN
+                            "Payment Method" -> ADD_NEW_PAYMENT_METHOD
+                            else -> null
+                        }
+
+                        route?.let { navController.navigate(it) }
+                    },
+                    navController = navController                )
             }
 
             // Cart
             composable(Destinations.CART) {
-                 CartScreenContent()
+                 CartScreenContent(navController = navController)
             }
 
             //User Profile
@@ -197,6 +230,92 @@ fun NavigationWrapper(
                 SellerProfileScreen(navController = navController)
             }
 
+            // Payment Method
+            composable (Destinations.CHOOSE_PAYMENT_METHOD) {
+                ChoosePaymentMethodScreen(navController = navController)
+            }
+
+            composable (ADD_NEW_PAYMENT_METHOD) {
+                AddNewPaymentScreen(navController = navController)
+            }
+
+            composable (Destinations.PAYMENT_SUCCESS) {
+                PaymentSuccessScreen(navController = navController)
+            }
+
+            //Settings Screens
+
+            composable(SETTINGS_ACCOUNT_SCREEN) {
+                SettingsAccountScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onSaveChanges = { name, username, email ->
+                        // lógica para guardar cambios
+                    }
+                )
+            }
+
+
+            composable(SETTINGS_NOTIFICATIONS_SCREEN) {
+                SettingsNotificationsScreen(
+                    onBackClick = { navController.popBackStack() },
+                    categories = FakeSettingsDataProvider.getSettingsNotifications(),
+                    onItemClick = {}
+                )
+            }
+
+
+            composable(SETTINGS_PRIVACY_SCREEN) {
+                SettingsPrivacyScreen(
+                    onBackClick = { navController.popBackStack() },
+                    categories = FakeSettingsDataProvider.getSettingsPrivacy(),
+                    onItemClick = {}
+                )
+            }
+
+
+            composable(SETTINGS_SECURITY_SCREEN) {
+                SettingsSecurityScreen(
+                    navController = navController,
+                    onBackClick = { navController.popBackStack() },
+                    onItemClick = { item ->
+                        when (item.title) {
+                            "Change Password" -> navController.navigate(Destinations.CHANGE_PASSWORD)
+                            "Change Email" -> navController.navigate(Destinations.CHANGE_EMAIL)
+                            else -> {}
+                        }
+                    }
+                )
+            }
+
+            composable(SETTINGS_FAQ_SCREEN) {
+                SettingsFaqScreen(
+                    onBackClick = { navController.popBackStack() }
+                )
+            }
+
+            composable(Destinations.CHANGE_EMAIL) {
+                SettingsChangeEmailScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onSaveEmail = { email ->
+                        // Acá podés validar el email o usar un ViewModel si querés
+                        navController.popBackStack() // Volver luego de guardar
+                    }
+                )
+            }
+
+            composable(Destinations.CHANGE_PASSWORD) {
+                SettingsChangePasswordScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onChangePassword = { newPassword, confirmPassword ->
+                        if (newPassword == confirmPassword) {
+                            // Guardar la nueva contraseña o usar ViewModel
+                            navController.popBackStack()
+                        } else {
+                            // Mostrar error si querés (snackbar, toast, etc.)
+                        }
+                    }
+                )
+            }
 
         }
     }

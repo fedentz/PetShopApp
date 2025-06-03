@@ -9,15 +9,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
 
+
 @Composable
-fun DrawerContent(onSettingsClick: () -> Unit) {
+fun DrawerContent(
+    navController: NavController,
+    onSettingsClick: () -> Unit
+) {
     SettingsPageScreen(
         categories = FakeSettingsDataProvider.getSettingsCategories(),
         onBackClick = {},
-        onItemClick = { onSettingsClick() }
+        onItemClick = { onSettingsClick() },
+        navController = navController
     )
 }
 
