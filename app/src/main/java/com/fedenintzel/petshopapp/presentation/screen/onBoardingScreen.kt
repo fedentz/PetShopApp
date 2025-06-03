@@ -1,4 +1,4 @@
-package com.fedenintzel.petshopapp.presentation.screen.profile
+package com.fedenintzel.petshopapp.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -29,7 +27,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -37,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.ui.theme.Poppins
+import kotlin.coroutines.Continuation
 
 @Composable
-fun OnBoardingScreen() {
+fun OnBoardingScreen(onContinue: () -> Unit) {
     Box(modifier = Modifier
         .background(Color.White)
         .fillMaxSize()) {
@@ -62,7 +60,7 @@ fun OnBoardingScreen() {
                 Spacer(modifier = Modifier.height(32.dp))
                 CarrouselDots()
                 Spacer(modifier = Modifier.height(32.dp))
-                GetStartedButton()
+                GetStartedButton(onClick = onContinue)
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -148,9 +146,9 @@ fun CarrouselDots() {
 }
 
 @Composable
-fun GetStartedButton() {
+fun GetStartedButton(onClick: () -> Unit) {
     Button(
-        onClick = {},
+        onClick = onClick,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7140FD)),
         modifier = Modifier
@@ -167,8 +165,9 @@ fun GetStartedButton() {
     }
 }
 
+
 @Composable
 @Preview
 fun PreviewOnBoardingScreen() {
-    OnBoardingScreen()
+    OnBoardingScreen(onContinue = {})
 }
