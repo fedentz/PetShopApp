@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 
@@ -27,7 +29,7 @@ import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
  * Usa Scaffold y está preparada para recibir bottomBar desde el nivel superior.
  */
 @Composable
-fun UserProfileScreen() {
+fun UserProfileScreen(navController: NavController) {
     val favoriteProducts = listOf(
         Product("RC Kitten", 20.99, R.drawable.product_image),
         Product("RC Persian", 22.99, R.drawable.product_image),
@@ -49,10 +51,16 @@ fun UserProfileScreen() {
         ) {
             // Control superior Profile y Seller Mode
             var selectedTab by remember { mutableStateOf(0) }
+
             SegmentedControl(
                 options = listOf("Profile", "Seller Mode"),
                 selectedIndex = selectedTab,
-                onOptionSelected = { selectedTab = it },
+                onOptionSelected = {
+                    selectedTab = it
+                    if (it == 1) {
+                        navController.navigate(SELLER_PROFILE)
+                    }
+                },
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -109,10 +117,4 @@ data class Product(
     val imageResId: Int
 )
 
-@Preview(showBackground = true)
-@Composable
-fun UserProfileScreenPreview() {
-    PetShopAppTheme {
-        UserProfileScreen()
-    }
-}
+

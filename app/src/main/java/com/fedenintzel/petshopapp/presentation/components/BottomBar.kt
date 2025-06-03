@@ -24,7 +24,7 @@ enum class BottomBarItem {
 @Composable
 fun BottomBar(
     selected: BottomBarItem = BottomBarItem.HOME,
-    onHomeClick: () -> Unit,
+    onHomeClick: () -> Unit = {},
     onTimeClick: () -> Unit = {},
     onBagClick: () -> Unit = {},
     onProfileClick: () -> Unit = {},
@@ -62,7 +62,7 @@ fun BottomBar(
             BottomBarIcon(
                 iconRes = R.drawable.ic_bag_custom,
                 selected = selected == BottomBarItem.BAG,
-                contentDescription = "Bag",
+                contentDescription = "Cart",
                 onClick = onBagClick,
                 modifier = Modifier.weight(1f)
             )
