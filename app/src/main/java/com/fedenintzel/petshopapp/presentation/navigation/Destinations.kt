@@ -12,5 +12,7 @@ object Destinations {
     const val ADD_NEW_PAYMENT = "add_new_payment"
     const val CHOOSE_PAYMENT_METHOD = "choose_payment_method"
     const val SETTINGS = "settings"
+    const val USER_PROFILE = "user_profile"
+    const val SELLER_PROFILE = "seller_profile"
 }
 

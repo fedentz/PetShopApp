@@ -11,7 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.navigation.Destinations
+import com.fedenintzel.petshopapp.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 
@@ -26,7 +29,7 @@ import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
  * - Grilla de productos publicados
  */
 @Composable
-fun SellerProfileScreen() {
+fun SellerProfileScreen(navController: NavController) {
     val sellerProducts = listOf(
         Product("RC Kitten", 20.99, R.drawable.product_image),
         Product("RC Persian", 22.99, R.drawable.product_image),
@@ -43,12 +46,19 @@ fun SellerProfileScreen() {
         ) {
             // Selector superior Profile o Seller Mode
             var selectedTab by remember { mutableStateOf(1) } // ← Arranca en Seller Mode
+
             SegmentedControl(
                 options = listOf("Profile", "Seller Mode"),
                 selectedIndex = selectedTab,
-                onOptionSelected = { selectedTab = it },
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                onOptionSelected = {
+                    selectedTab = it
+                    if (it == 0) {
+                        navController.navigate(Destinations.USER_PROFILE) {
+                            popUpTo(Destinations.SELLER_PROFILE) { inclusive = true }
+                        }
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -116,10 +126,3 @@ fun SellerProfileScreen() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SellerProfileScreenPreview() {
-    PetShopAppTheme {
-        SellerProfileScreen()
-    }
-}
