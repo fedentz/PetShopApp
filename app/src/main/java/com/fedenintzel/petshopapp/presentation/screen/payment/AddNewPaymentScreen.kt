@@ -14,6 +14,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -44,10 +46,10 @@ fun AddNewPaymentScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 20.dp),
+            .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header()
+        Header(navController = navController)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -194,30 +196,42 @@ fun PaymentField(
 }
 
 @Composable
-fun Header() {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Box(
+fun Header(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
+            ) // padding superior según notch
+            .padding(vertical = 12.dp), // padding visual adicional
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(
+            onClick = { navController.popBackStack() },
             modifier = Modifier
-                .size(width = 40.dp, height = 40.dp)
-                .background(Color(0xFFF5F5F5), shape = RoundedCornerShape(12.dp))
-                .clickable { /* TODO: handle navigation */ }
-                .align(Alignment.CenterStart),
-            contentAlignment = Alignment.Center
+                .size(46.dp)
+                .shadow(
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    clip = false,
+                    ambientColor = Color(0x33000000),
+                    spotColor = Color(0x33000000)
+                )
+                .background(Color.White, shape = RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp))
+                .align(Alignment.CenterStart)
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back",
-                tint = Color.Black,
-                modifier = Modifier.size(18.dp)
+                painter = painterResource(id = R.drawable.arrow_left),
+                contentDescription = "Back"
             )
         }
 
         Text(
             text = "Payment Method",
-            modifier = Modifier.align(Alignment.Center),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
             fontFamily = Poppins,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
             color = Color.Black
         )
     }

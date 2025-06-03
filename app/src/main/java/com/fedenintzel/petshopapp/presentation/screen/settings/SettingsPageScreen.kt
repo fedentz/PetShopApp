@@ -59,7 +59,7 @@ fun SettingsPageScreen(
         onBackClick = onBackClick,
         showBottomButton = true,
         bottomButtonText = "Log Out",
-        onBottomButtonClick = {navController.navigate(Destinations.ONBOARDING)},
+        onBottomButtonClick = {navController.navigate(Destinations.LOGIN)},
         bottomButtonFilled = false
     ) {
         Column(

@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.components.ProductCardCart
 import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
+import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
@@ -31,7 +32,8 @@ import com.fedenintzel.petshopapp.ui.theme.Poppins
 @Composable
 fun BestSellerScreen(
     navController: NavController,
-    viewModel: ProductsViewModel = hiltViewModel()
+    viewModel: ProductsViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
 
@@ -117,7 +119,7 @@ fun BestSellerScreen(
                                     name = product.title,
                                     price = product.price,
                                     imageUrl = product.thumbnail,
-                                    onAddClick = { viewModel.addToCart(product) },
+                                    onAddClick = { cartViewModel.addToCart(product) },
                                     onCardClick = { navController.navigate("product_detail/${product.id}") },
                                     modifier = Modifier.weight(1f)
                                 )

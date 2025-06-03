@@ -38,7 +38,10 @@ fun ProductCard(
             .clip(RoundedCornerShape(24.dp))
             .clickable { onCardClick() },
         shape = RoundedCornerShape(24.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFF8F8F8)
+        )
     ) {
         Column(
             modifier = Modifier
