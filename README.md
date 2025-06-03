@@ -107,7 +107,9 @@ La aplicación utiliza [DummyJSON](https://dummyjson.com/) como backend simulado
 
 ## 📱 Capturas de Pantalla
 
-*Próximamente: Agregar screenshots de las principales pantallas*
+![Image](https://github.com/user-attachments/assets/a09ee88f-7629-42db-b0ec-88d7809f9c72)
+![Image](https://github.com/user-attachments/assets/ab411907-78fc-4ca8-adcd-49478d35ce82)
+![Image](https://github.com/user-attachments/assets/122aea31-f298-4575-9ca5-53d9d8bace6c)
 
 ## 🤝 Contribución
 
