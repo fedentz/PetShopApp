@@ -23,11 +23,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.navigation.Destinations
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
-fun AddNewPaymentScreen() {
+fun AddNewPaymentScreen(
+    navController: NavController
+) {
     var cardNumber by remember { mutableStateOf("") }
     var cardName by remember { mutableStateOf("") }
     var expired by remember { mutableStateOf("") }
@@ -95,8 +99,7 @@ fun AddNewPaymentScreen() {
             onClick = {
                 attemptedSubmit = true
                 if (allFieldsFilled) {
-                    // Procesar pago
-                }
+                    navController.navigate(Destinations.SETTINGS)                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,8 +223,3 @@ fun Header() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AddNewPaymentScreenPreview() {
-    AddNewPaymentScreen()
-}

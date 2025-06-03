@@ -18,11 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.navigation.Destinations
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
-fun ChoosePaymentMethodScreen() {
+fun ChoosePaymentMethodScreen(
+    navController: NavController
+) {
     var selectedOption by remember { mutableStateOf("") }
 
     val options = listOf("Paypal", "Bank Transfer")
@@ -59,7 +63,7 @@ fun ChoosePaymentMethodScreen() {
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = { /* Handle Checkout */ },
+            onClick = { navController.navigate(Destinations.PAYMENT_SUCCESS) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
@@ -150,8 +154,4 @@ fun PaymentOptionItem(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ChoosePaymentMethodScreenPreview() {
-    ChoosePaymentMethodScreen()
-}
+
