@@ -71,7 +71,7 @@ fun NavigationWrapper(
     {
         NavHost(
             navController = navController,
-            startDestination = Destinations.HOME
+            startDestination = Destinations.ONBOARDING
         ) {
             // Onboarding
             composable(Destinations.ONBOARDING) {

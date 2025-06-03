@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
+import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 
 /**
@@ -29,12 +31,17 @@ import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
  * - Grilla de productos publicados
  */
 @Composable
-fun SellerProfileScreen(navController: NavController) {
+fun SellerProfileScreen(
+    navController: NavController,
+    productsViewModel: ProductsViewModel = hiltViewModel() ) {
+
+    val productState by productsViewModel.state.collectAsState()
+
     val sellerProducts = listOf(
-        Product("RC Kitten", 20.99, R.drawable.product_image),
-        Product("RC Persian", 22.99, R.drawable.product_image),
-        Product("RC Kitten", 20.99, R.drawable.product_image),
-        Product("RC Persian", 22.99, R.drawable.product_image)
+        ProductSeller("RC Kitten", 20.99, R.drawable.product_image),
+        ProductSeller("RC Persian", 22.99, R.drawable.product_image),
+        ProductSeller("RC Kitten", 20.99, R.drawable.product_image),
+        ProductSeller("RC Persian", 22.99, R.drawable.product_image)
     )
 
     Scaffold { innerPadding ->
@@ -84,14 +91,24 @@ fun SellerProfileScreen(navController: NavController) {
 
             // Tabs Product / Sold / Stats
             var sectionIndex by remember { mutableStateOf(0) }
-            HorizontalFilterButtons(
-                options = listOf("Product", "Sold", "Stats"),
-                selectedIndex = sectionIndex,
-                onSelect = { sectionIndex = it },
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                HorizontalFilterButtons(
+                    options = listOf(
+                        "Product" to null,
+                        "Sold" to null,
+                        "Stats" to null
+                    ),
+                    selectedIndex = sectionIndex,
+                    onSelect = { sectionIndex = it },
+                    modifier = Modifier.wrapContentWidth()
+                )
+            }
+
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -105,13 +122,13 @@ fun SellerProfileScreen(navController: NavController) {
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(sellerProducts) { product ->
-                            ProductCardCart(
-                                name = product.name,
+                        items(productState.products) { product ->
+                            ProductCard(
+                                name = product.title,
                                 price = product.price,
-                                imageResId = product.imageResId,
+                                imageUrl = product.thumbnail,
                                 onAddClick = { /* No debería ir a ningún carrito */ },
-                                onCardClick = { /* ProductDetails */ }
+                                onCardClick = { navController.navigate("product_detail/${product.id}") }
                             )
                         }
                     }
@@ -126,3 +143,8 @@ fun SellerProfileScreen(navController: NavController) {
     }
 }
 
+data class ProductSeller(
+    val name: String,
+    val price: Double,
+    val imageResId: Int
+)
