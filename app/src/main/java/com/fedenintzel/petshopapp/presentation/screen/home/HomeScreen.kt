@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.fedenintzel.petshopapp.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
@@ -33,7 +33,7 @@ fun HomeScreen(
 
     LaunchedEffect(showSnackbar) {
         if (showSnackbar) {
-            snackbarHostState.showSnackbar("Producto agregado al carrito")
+            snackbarHostState.showSnackbar("Product added to cart")
             cartViewModel.clearSnackbar()
         }
     }

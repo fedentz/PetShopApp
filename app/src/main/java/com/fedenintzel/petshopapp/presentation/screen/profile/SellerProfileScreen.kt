@@ -13,8 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
-import com.fedenintzel.petshopapp.navigation.Destinations
-import com.fedenintzel.petshopapp.navigation.Destinations.SELLER_PROFILE
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 

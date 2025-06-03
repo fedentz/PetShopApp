@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
-import com.fedenintzel.petshopapp.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable

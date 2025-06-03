@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -20,7 +23,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.components.ProductCardCart
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.presentation.components.ProductCard
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,46 +41,48 @@ fun BestSellerScreen(
             .background(Color.White)
     ) {
         Column(
-            Modifier
-                .fillMaxWidth()
+            Modifier.fillMaxWidth()
         ) {
             // Header con flecha y título
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 18.dp, start = 12.dp, end = 12.dp, bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
+                    ) // padding superior según notch
+                    .padding(horizontal = 20.dp, vertical = 12.dp), // padding visual adicional
+                contentAlignment = Alignment.Center
             ) {
                 IconButton(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier
-                        .size(38.dp)
-                        .background(
-                            color = Color(0xFFF5F6FA),
-                            shape = MaterialTheme.shapes.medium
+                        .size(46.dp)
+                        .shadow(
+                            elevation = 10.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            clip = false,
+                            ambientColor = Color(0x33000000),
+                            spotColor = Color(0x33000000)
                         )
+                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .align(Alignment.CenterStart)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow_back),
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(Color.White, shape = CircleShape)
-                            .clickable { navController.popBackStack() }
-                            .padding(10.dp)
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_left),
+                        contentDescription = "Back"
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
+
                 Text(
                     text = "Best Seller",
+                    fontFamily = Poppins,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.align(Alignment.CenterVertically)
+                    fontSize = 16.sp,
+                    color = Color.Black
                 )
-                Spacer(modifier = Modifier.weight(1f))
-
-                Box(modifier = Modifier.size(38.dp))
             }
+
             //listado de productos
             if (uiState.isLoading) {
                 Box(
@@ -106,7 +113,7 @@ fun BestSellerScreen(
                             horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             rowProducts.forEach { product ->
-                                ProductCardCart(
+                                ProductCard(
                                     name = product.title,
                                     price = product.price,
                                     imageUrl = product.thumbnail,

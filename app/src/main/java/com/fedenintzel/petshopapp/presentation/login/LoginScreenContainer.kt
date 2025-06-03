@@ -3,6 +3,7 @@ package com.fedenintzel.petshopapp.presentation.login
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 
 /**
@@ -26,18 +27,18 @@ fun LoginScreenContainer(
 
         // Callback para navegar a la pantalla de registro
         onCreateAccountClick = {
-            navController.navigate("register")
+            navController.navigate(Destinations.CREATE_ACCOUNT)
         },
 
-        // 🆕 Callback para ir a forgot password
+        //  Callback para ir a forgot password
         onForgotPasswordClick = {
-            navController.navigate("forgot")
+            navController.navigate(Destinations.FORGOT_PASSWORD)
         },
 
         // Si el login fue exitoso, navegar a la home
         onSuccessLogin = {
-            navController.navigate("home") {
-                popUpTo("login") { inclusive = true }
+            navController.navigate(Destinations.HOME) {
+                popUpTo(Destinations.LOGIN) { inclusive = true }
             }
         }
     )

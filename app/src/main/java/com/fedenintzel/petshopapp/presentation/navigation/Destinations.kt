@@ -1,5 +1,5 @@
 
-package com.fedenintzel.petshopapp.navigation
+package com.fedenintzel.petshopapp.presentation.navigation
 
 
 object Destinations {

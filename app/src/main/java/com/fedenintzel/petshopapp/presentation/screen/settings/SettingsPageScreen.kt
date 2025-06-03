@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
 import com.fedenintzel.petshopapp.domain.model.settings.SettingsCategory
 import com.fedenintzel.petshopapp.domain.model.settings.SettingsItem
-import com.fedenintzel.petshopapp.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.SettingsBaseScreen
 import com.fedenintzel.petshopapp.presentation.components.SettingsItemRow
 import com.fedenintzel.petshopapp.ui.theme.Poppins

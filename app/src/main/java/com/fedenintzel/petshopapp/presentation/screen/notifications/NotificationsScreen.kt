@@ -11,12 +11,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 enum class NotificationTab { ACTIVITY, SELLER }
 
@@ -111,30 +113,41 @@ fun NotificationsScreen(onBack: () -> Unit) {
     ) {
         // Encabezado: Flecha y título
         Box(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+                .padding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
+                ) // padding superior según notch
+                .padding(horizontal = 16.dp, vertical = 12.dp), // padding visual adicional
+            contentAlignment = Alignment.Center
         ) {
-            Box(
+            IconButton(
+                onClick = onBack,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(46.dp)
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        clip = false,
+                        ambientColor = Color(0x33000000),
+                        spotColor = Color(0x33000000)
+                    )
+                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(16.dp))
                     .align(Alignment.CenterStart)
-                    .clip(CircleShape)
-                    .background(Color(0xFFF5F5F5))
-                    .clickable { onBack() },
-                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = "Back",
-                    modifier = Modifier.size(20.dp)
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_left),
+                    contentDescription = "Back"
                 )
             }
+
             Text(
-                "Notification",
+                text = "Notification",
+                fontFamily = Poppins,
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.align(Alignment.Center)
+                fontSize = 16.sp,
+                color = Color.Black
             )
         }
 

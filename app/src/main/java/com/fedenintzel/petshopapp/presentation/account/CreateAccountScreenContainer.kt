@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import kotlinx.coroutines.launch
 
 /**
@@ -30,7 +31,7 @@ fun CreateAccountScreenContainer(
         if (uiState.isSuccess) {
             coroutineScope.launch {
                 snackbarHostState.showSnackbar("Registration successful")
-                navController.navigate("home") {
+                navController.navigate(Destinations.HOME) {
                     popUpTo("register") { inclusive = true }
                 }
             }

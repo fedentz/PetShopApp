@@ -19,7 +19,9 @@ import com.fedenintzel.petshopapp.R
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.Image
+import androidx.compose.ui.draw.shadow
 import com.fedenintzel.petshopapp.presentation.components.CategorySelector
+import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
 fun SearchScreen(
@@ -38,43 +40,49 @@ fun SearchScreen(
             .fillMaxSize()
             .background(Color.White)
             .padding(horizontal = 20.dp)
+
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
+
         // Top bar con back y título
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                shape = CircleShape,
-                shadowElevation = 8.dp,
-                color = Color.White,
-                modifier = Modifier.size(40.dp)
+        Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
+                    ) // padding superior según notch
+                    .padding(vertical = 12.dp), // padding visual adicional
+                contentAlignment = Alignment.Center
             ) {
                 IconButton(
                     onClick = { navController.popBackStack() },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .size(46.dp)
+                        .shadow(
+                            elevation = 10.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            clip = false,
+                            ambientColor = Color(0x33000000),
+                            spotColor = Color(0x33000000)
+                        )
+                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .align(Alignment.CenterStart)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow_back),
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .background(Color.White, shape = CircleShape)
-                            .clickable { navController.popBackStack() }
-                            .padding(10.dp)
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_left),
+                        contentDescription = "Back"
                     )
                 }
+
+                Text(
+                    text = "Search",
+                    fontFamily = Poppins,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                "Search",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.width(40.dp)) // Para balancear el back
-        }
+
         Spacer(modifier = Modifier.height(28.dp))
         // Buscador
         Surface(

@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +32,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductDetailViewModel
+import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
 fun ProductDetailScreen(
@@ -58,7 +60,7 @@ fun ProductDetailScreen(
 
     LaunchedEffect(showSnackbar) {
         if (showSnackbar) {
-            snackbarHostState.showSnackbar("Product added to favorites")
+            snackbarHostState.showSnackbar("Product added to Cart")
             cartViewModel.clearSnackbar()
         }
     }
@@ -84,10 +86,10 @@ fun ProductDetailScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(error ?: "Producto no encontrado")
+                    Text(error ?: "Product not found")
                     Spacer(Modifier.height(20.dp))
                     Button(onClick = { navController.popBackStack("home", inclusive = false) }) {
-                        Text("Volver a la home")
+                        Text("Back to Home")
                     }
                 }
             }
@@ -105,52 +107,63 @@ fun ProductDetailScreen(
                             .fillMaxSize()
                             .background(Color.White)
                     ) {
+                       // Encabezado: Flecha, título, y favorito
                         Row(
-                            Modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 32.dp, start = 20.dp, end = 20.dp),
-                            verticalAlignment = Alignment.CenterVertically
+//                                .padding(
+//                                    WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
+//                                )
+                                .padding(top = 14.dp, start = 20.dp, end = 20.dp, bottom = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Box(
-                                Modifier
-                                    .size(40.dp)
-                                    .clip(CircleShape)
-                                    .background(color = Color(0xFFF5F6FA))
-                                    .clickable { navController.popBackStack() },
-                                contentAlignment = Alignment.Center
+                            IconButton(
+                                onClick = { navController.popBackStack() },
+                                modifier = Modifier
+                                    .size(46.dp)
+                                    .shadow(
+                                        elevation = 10.dp,
+                                        shape = RoundedCornerShape(16.dp),
+                                        clip = false,
+                                        ambientColor = Color(0x33000000),
+                                        spotColor = Color(0x33000000)
+                                    )
+                                    .background(Color.White, shape = RoundedCornerShape(16.dp))
+                                    .clip(RoundedCornerShape(16.dp))
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_arrow_back),
-                                    contentDescription = "Back",
-                                    modifier = Modifier.size(22.dp)
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_left),
+                                    contentDescription = "Back"
                                 )
                             }
-                            Spacer(Modifier.weight(1f))
+
                             Text(
                                 text = "Product Detail",
+                                fontFamily = Poppins,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                                color = Color(0xFF222222)
+                                fontSize = 16.sp,
+                                color = Color.Black
                             )
-                            Spacer(Modifier.weight(1f))
-                            Box(
-                                Modifier
+
+                            IconButton(
+                                onClick = { viewModel.toggleFavorite() },
+                                modifier = Modifier
                                     .size(40.dp)
-                                    .clip(CircleShape)
-                                    .background(color = Color(0xFFF5F6FA))
-                                    .clickable { viewModel.toggleFavorite() },
-                                contentAlignment = Alignment.Center
+                                    .background(color = Color(0xFFF5F6FA), shape = CircleShape)
                             ) {
                                 Icon(
                                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                                     contentDescription = "Favorite",
-                                    tint = if (isFavorite) Color.Red else Color(0xFFB3B1B0),
-                                    modifier = Modifier.size(22.dp)
+                                    tint = if (isFavorite) Color.Red else Color(0xFFB3B1B0)
                                 )
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(18.dp))
+
+
+
+                        Spacer(modifier = Modifier.height(12.dp))
 
                         Column(
                             modifier = Modifier

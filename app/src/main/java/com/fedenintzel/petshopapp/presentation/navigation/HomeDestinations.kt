@@ -1,4 +1,4 @@
-package com.fedenintzel.petshopapp.navigation
+package com.fedenintzel.petshopapp.presentation.navigation
 
 object HomeDestinations {
     const val HOME = "home"

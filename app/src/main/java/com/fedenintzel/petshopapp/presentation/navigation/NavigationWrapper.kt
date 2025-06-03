@@ -1,37 +1,27 @@
-package com.fedenintzel.petshopapp.navigation
+package com.fedenintzel.petshopapp.presentation.navigation
 
-
-import androidx.activity.ComponentActivity
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
-import com.fedenintzel.petshopapp.navigation.Destinations.ADD_NEW_PAYMENT_METHOD
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_ACCOUNT_SCREEN
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_FAQ_SCREEN
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_NOTIFICATIONS_SCREEN
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_PRIVACY_SCREEN
-import com.fedenintzel.petshopapp.navigation.Destinations.SETTINGS_SECURITY_SCREEN
 import com.fedenintzel.petshopapp.presentation.account.CreateAccountScreenContainer
-import com.fedenintzel.petshopapp.presentation.account.CreateAccountViewModel
 import com.fedenintzel.petshopapp.presentation.account.ForgotPasswordScreenContainer
-import com.fedenintzel.petshopapp.presentation.account.ForgotPasswordViewModel
 import com.fedenintzel.petshopapp.presentation.components.DrawerContent
 import com.fedenintzel.petshopapp.presentation.login.LoginScreenContainer
-import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
-import com.fedenintzel.petshopapp.presentation.viewmodel.ForgotPasswordUiState
-import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.ADD_NEW_PAYMENT_METHOD
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS_ACCOUNT_SCREEN
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS_FAQ_SCREEN
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS_NOTIFICATIONS_SCREEN
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS_PRIVACY_SCREEN
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SETTINGS_SECURITY_SCREEN
 import com.fedenintzel.petshopapp.presentation.screen.OnBoardingScreen
 import com.fedenintzel.petshopapp.presentation.screen.bestseller.BestSellerScreen
 import com.fedenintzel.petshopapp.presentation.screen.cart.CartScreenContent
@@ -57,8 +47,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationWrapper(
-    loginFactory: ViewModelProvider.Factory,
-    createAccountFactory: ViewModelProvider.Factory
+
 ) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -82,13 +71,13 @@ fun NavigationWrapper(
     {
         NavHost(
             navController = navController,
-            startDestination = Destinations.ONBOARDING
+            startDestination = Destinations.HOME
         ) {
             // Onboarding
             composable(Destinations.ONBOARDING) {
                 OnBoardingScreen(
                     onContinue = {
-                        navController.navigate(Destinations.HOME) {
+                        navController.navigate(Destinations.LOGIN) {
                             popUpTo(Destinations.ONBOARDING) { inclusive = true }
                         }
                     }
@@ -98,70 +87,32 @@ fun NavigationWrapper(
 
             // Login
             composable(Destinations.LOGIN) {
-                val loginViewModel = ViewModelProvider(
-                    navController.context as ComponentActivity,
-                    loginFactory
-                )[LoginViewModel::class.java]
-
 
                 LoginScreenContainer(
-                    loginViewModel = loginViewModel,
-                    uiState = loginViewModel.uiState,
-                    onLoginClick = { email, password ->
-                        loginViewModel.login(email, password)
-                        navController.navigate(Destinations.HOME) {
-                            popUpTo(Destinations.LOGIN) { inclusive = true }
-                        }
-                    },
-                    onCreateAccountClick = {
-                        navController.navigate(Destinations.CREATE_ACCOUNT)
-                    },
-                    onForgotPasswordClick = {
-                        navController.navigate(Destinations.FORGOT_PASSWORD)
-                    }
+
+                    navController = navController
                 )
             }
 
 
             // Crear cuenta
             composable(Destinations.CREATE_ACCOUNT) {
-                val viewModel = ViewModelProvider(
-                    navController.context as ComponentActivity,
-                    createAccountFactory
-                )[CreateAccountViewModel::class.java]
-
-
-                val uiState =
-                    viewModel.uiState.collectAsState(initial = CreateAccountUiState()).value
-
 
                 CreateAccountScreenContainer(
-                    createAccountViewModel = viewModel,
-                    uiState = uiState,
-                    onCreateAccountClick = { fullName, email, password, agreed ->
-                        viewModel.createAccount(fullName, email, password, agreed)
-                    },
-                    onLoginClick = {
+                   onLoginClick = {
                         navController.popBackStack(Destinations.LOGIN, false)
-                    }
+                    },
+                    navController = navController
                 )
             }
 
 
             // Forgot Password
             composable(Destinations.FORGOT_PASSWORD) {
-                val viewModel: ForgotPasswordViewModel = hiltViewModel()
-
-
-                val uiState =
-                    viewModel.uiState.collectAsState(initial = ForgotPasswordUiState()).value
 
 
                 ForgotPasswordScreenContainer(
-                    viewModel = viewModel,
-                    uiState = uiState,
-                    onSendResetLinkClick = viewModel::sendResetLink,
-                    onResetPasswordClick = viewModel::resetPassword,
+
                     onBackToLoginClick = {
                         navController.popBackStack(Destinations.LOGIN, false)
                     }

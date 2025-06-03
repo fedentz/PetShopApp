@@ -23,7 +23,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavController
-import com.fedenintzel.petshopapp.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 
 @Composable
 fun CartScreenContent(
