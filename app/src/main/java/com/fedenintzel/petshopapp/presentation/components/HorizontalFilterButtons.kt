@@ -25,38 +25,39 @@ import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 
-/**
- * Componente de botones tipo filtro, con opción de incluir un ícono como primer botón
- *
- * El botón activo se destaca con fondo morado (#7140FD) y texto blanco.
- * Los botones inactivos tienen fondo gris claro (#F8F8F8) y texto gris (#B3B1B0)
- *
- * @param options Lista de nombres para los botones. El primero puede ser un ícono (texto se ignora si hay ícono)
- * @param selectedIndex Índice del botón actualmente activo
- * @param onSelect Lógica a ejecutar al seleccionar un botón
- * @param leadingIconForFirstItem Ícono exclusivo que se renderiza solo en el primer botón
- *
- */
+/*
+* Componente de botones tipo filtro, con opción de incluir un ícono como primer botón
+*
+* El botón activo se destaca con fondo morado (#7140FD) y texto blanco.
+* Los botones inactivos tienen fondo gris claro (#F8F8F8) y texto gris (#B3B1B0)
+*
+* @param options Lista de pares (texto del botón, acción opcional). El primero puede ser un ícono (texto se ignora si hay ícono)
+* @param selectedIndex Índice del botón actualmente activo
+* @param onSelect Lógica a ejecutar al seleccionar un botón
+* @param leadingIconForFirstItem Ícono exclusivo que se renderiza solo en el primer botón
+*/
 
 @Composable
 fun HorizontalFilterButtons(
-    options: List<String>,
+    options: List<Pair<String, (() -> Unit)?>>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     leadingIconForFirstItem: (@Composable () -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
 
-        val actualOptions = if (leadingIconForFirstItem != null && options.firstOrNull() != "") {
-            listOf("") + options
+    ) {
+        val actualOptions = if (leadingIconForFirstItem != null && options.isNotEmpty()) {
+            listOf("" to null) + options
         } else {
             options
         }
 
-        actualOptions.forEachIndexed { index, label ->
+        actualOptions.forEachIndexed { index, (label, action) ->
             val isSelected = index == selectedIndex
 
             val backgroundColor = if (isSelected) Color(0xFF7140FD) else Color(0xFFF8F8F8)
@@ -66,7 +67,10 @@ fun HorizontalFilterButtons(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .background(backgroundColor)
-                    .clickable { onSelect(index) }
+                    .clickable {
+                        onSelect(index)
+                        action?.invoke()
+                    }
                     .padding(horizontal = 20.dp, vertical = 14.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -86,6 +90,7 @@ fun HorizontalFilterButtons(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun HorizontalFilterButtonsPreview(){
@@ -93,7 +98,10 @@ fun HorizontalFilterButtonsPreview(){
         val selectedIndex = 1
 
         HorizontalFilterButtons(
-            options = listOf("Food", "Toys", "Accessories"),
+            options = listOf(
+                "Saved" to null,
+                "Edit Profile" to { /* Alguna acción */ }
+            ),
             selectedIndex = selectedIndex,
             onSelect = {  },
             leadingIconForFirstItem = {
