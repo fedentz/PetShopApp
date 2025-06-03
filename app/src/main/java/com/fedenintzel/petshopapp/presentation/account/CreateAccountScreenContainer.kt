@@ -1,34 +1,54 @@
 package com.fedenintzel.petshopapp.presentation.account
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-
-import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
-import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 
 /**
- * Container que expone directamente createAccountViewModel.uiState (un Compose State)
- * y lo pasa a CreateAccountScreen, junto con las lambdas de acción.
+ * Container que conecta la pantalla con el ViewModel.
+ * Se encarga de manejar navegación tras registro exitoso.
  */
 @Composable
 fun CreateAccountScreenContainer(
-    createAccountViewModel: CreateAccountViewModel,
-    onCreateAccountClick: (fullName: String, email: String, password: String, agreed: Boolean) -> Unit,
     onLoginClick: () -> Unit,
-    uiState: CreateAccountUiState
+    navController: NavController,
+    viewModel: CreateAccountViewModel = hiltViewModel()
 ) {
-    // 1) Leemos directamente el uiState que ya es un State<CreateAccountUiState>
-    //val createAccountUiState: StateFlow<CreateAccountUiState> = createAccountViewModel.uiState
-    val createAccountUiState by createAccountViewModel.uiState.collectAsState()
-    // 2) Llamamos a la pantalla composable pasando uiState y las actions
-    CreateAccountScreen(
-        uiState = createAccountUiState,
-        onCreateAccountClick = { fullName, email, password, agreed ->
-            onCreateAccountClick(fullName, email, password, agreed)
-        },
-        onLoginClick = {
-            onLoginClick()
+    val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Mostrar snackbar y navegar si se registró con éxito
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar("Registration successful")
+                navController.navigate("home") {
+                    popUpTo("register") { inclusive = true }
+                }
+            }
         }
-    )
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            CreateAccountScreen(
+                uiState = uiState,
+                onCreateAccountClick = { fullName, email, password, agreed ->
+                    viewModel.createAccount(fullName, email, password, agreed)
+                },
+                onLoginClick = onLoginClick
+            )
+        }
+    }
 }
+

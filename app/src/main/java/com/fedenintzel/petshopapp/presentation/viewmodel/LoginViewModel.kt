@@ -1,51 +1,34 @@
 package com.fedenintzel.petshopapp.presentation.viewmodel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.fedenintzel.petshopapp.data.remote.dto.LoginResponse
-import com.fedenintzel.petshopapp.data.repository.AuthRepository
-import com.fedenintzel.petshopapp.domain.usecase.Result
+import com.fedenintzel.petshopapp.domain.usecase.LoginUseCase
+import com.fedenintzel.petshopapp.presentation.login.LoginUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-data class LoginUiState(
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val user: LoginResponse? = null
-)
-
-class LoginViewModel(
-    private val repo: AuthRepository
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(LoginUiState())
+    var uiState = mutableStateOf(LoginUiState())
         private set
 
     fun login(username: String, password: String) {
+        uiState.value = uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, errorMessage = null)
-            when (val result = repo.login(username, password)) {
-                is Result.Success<*> -> {
-                    uiState = uiState.copy(user = result.data as LoginResponse?)
-                }
-                is Result.Error -> {
-                    uiState = uiState.copy(errorMessage = result.message)
-                }
+            try {
+                val user = loginUseCase(username, password)
+                uiState.value = uiState.value.copy(isLoading = false, user = user)
+            } catch (e: Exception) {
+                uiState.value = uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "Unknown error"
+                )
             }
-            uiState = uiState.copy(isLoading = false)
-        }
-    }
-
-    class Factory(private val repo: AuthRepository) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return LoginViewModel(repo) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
 }

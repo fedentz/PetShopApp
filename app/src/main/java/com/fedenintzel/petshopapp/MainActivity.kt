@@ -24,55 +24,30 @@ import com.fedenintzel.petshopapp.presentation.account.CreateAccountScreenContai
 import com.fedenintzel.petshopapp.presentation.account.CreateAccountViewModel
 import com.fedenintzel.petshopapp.presentation.screen.cart.CartScreenContent
 import com.fedenintzel.petshopapp.presentation.screen.detail.ProductDetailScreen
-
 import com.fedenintzel.petshopapp.presentation.screen.favorites.FavoriteScreen
 import com.fedenintzel.petshopapp.presentation.screen.home.HomeScreen
 import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
 import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ForgotPasswordUiState
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+
 import com.fedenintzel.petshopapp.ui.theme.PetShopAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private object Destinations {
-        const val LOGIN = "login"
-        const val CREATE_ACCOUNT = "create_account"
-        const val FORGOT_PASSWORD = "forgot_password"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-
-        // --- 1) Configuramos Retrofit ---
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://dummyjson.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val authApi = retrofit.create(AuthApiService::class.java)
-
-        // --- 2) Creamos un repositorio compartido ---
-        val authRepo = AuthRepository(authApi)
-
-        // --- 3) Hacemos factories para los ViewModels que no inyectaremos con Hilt ---
-        val loginFactory = LoginViewModel.Factory(authRepo)
-        val createAccountFactory = CreateAccountViewModel.Factory(authRepo)
-        // Para ForgotPassword usaremos hiltViewModel(), así que no necesita Factory manual.
 
         setContent {
+
             setContent {
                 PetShopAppTheme {
                     NavigationWrapper(
-                        loginFactory = loginFactory,
-                        createAccountFactory = createAccountFactory
+                        
                     )
                 }
+
             }
         }
 
