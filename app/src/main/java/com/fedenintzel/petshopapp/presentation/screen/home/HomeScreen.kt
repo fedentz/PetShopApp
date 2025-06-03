@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
@@ -169,8 +170,8 @@ fun HomeScreen(
                 selected = BottomBarItem.HOME,
                 onHomeClick = { /* ya estás en Home */ },
                 onTimeClick = { /* a futuro */ },
-                onBagClick = { /* a futuro */ },
-                onProfileClick = { /* a futuro */ },
+                onBagClick = { navController.navigate(Destinations.CART) },
+                onProfileClick = { navController.navigate(Destinations.USER_PROFILE) },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .height(64.dp)

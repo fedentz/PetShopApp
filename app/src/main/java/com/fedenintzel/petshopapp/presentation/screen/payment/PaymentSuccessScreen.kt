@@ -11,10 +11,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.navigation.Destinations
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
-fun PaymentSuccessScreen() {
+fun PaymentSuccessScreen(
+    navController: NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -30,7 +34,9 @@ fun PaymentSuccessScreen() {
             Description()
         }
 
-        GoHomeButton()
+        GoHomeButton(
+            navController = navController
+        )
     }
 }
 
@@ -57,9 +63,9 @@ fun Description() {
 }
 
 @Composable
-fun GoHomeButton() {
+fun GoHomeButton(navController: NavController) {
     Button(
-        onClick = { /* TODO: Navegar a Home */ },
+        onClick = { navController.navigate(Destinations.HOME) },
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp),
@@ -78,8 +84,3 @@ fun GoHomeButton() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PaymentSuccessScreenPreview() {
-    PaymentSuccessScreen()
-}

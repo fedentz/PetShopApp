@@ -22,9 +22,12 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.ui.platform.LocalDensity
+import androidx.navigation.NavController
+import com.fedenintzel.petshopapp.navigation.Destinations
 
 @Composable
 fun CartScreenContent(
+    navController: NavController,
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -171,7 +174,7 @@ fun CartScreenContent(
                         }
 
                         Button(
-                            onClick = { /* Acción de checkout */ },
+                            onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7140FD)),
                             shape = RoundedCornerShape(32.dp),
                             modifier = Modifier
