@@ -6,13 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,13 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
 
-
 /**
- * Composable que muestra la pantalla de "Create Account".
+ * Pantalla de registro.
  *
- * @param uiState estado provisto por CreateAccountViewModel.
- * @param onCreateAccountClick callback que recibe (fullName, email, password, agreed).
- * @param onLoginClick callback que se dispara cuando se toca "Login" en la parte inferior.
+ * @param uiState Estado proveniente del ViewModel
+ * @param onCreateAccountClick Acción al presionar "Get Started"
+ * @param onLoginClick Acción al presionar "Login"
  */
 @Composable
 fun CreateAccountScreen(
@@ -37,12 +30,12 @@ fun CreateAccountScreen(
     onCreateAccountClick: (String, String, String, Boolean) -> Unit,
     onLoginClick: () -> Unit
 ) {
-    // Variables locales que reflejan el estado
-    var fullName by remember { mutableStateOf(uiState.firstName + " " + uiState.lastName) }
-    var email by remember { mutableStateOf(uiState.email) }
-    var password by remember { mutableStateOf(uiState.password) }
-    var agreed by remember { mutableStateOf(uiState.agreed) }
+    var fullName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var agreed by remember { mutableStateOf(false) }
 
+    // UI
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -55,46 +48,35 @@ fun CreateAccountScreen(
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            // ─── Título “Create New Account” ───
-            Text(
-                text = "Create New Account",
-                style = MaterialTheme.typography.headlineLarge,
-                color = Color.Black
-            )
-
+            Text("Create New Account", style = MaterialTheme.typography.headlineLarge, color = Color.Black)
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ─── Texto de descripción “Water is life...” ───
             Text(
-                text = "Water is life. Water is a basic human need. In various lines of life, humans need water.",
+                "Water is life. Water is a basic human need. In various lines of life, humans need water.",
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
                 color = Color(0xFF898989)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ─── Campo “Full Name” ───
+            // Full Name
             OutlinedTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                placeholder = { Text(text = "Full Name", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                placeholder = { Text("Full Name", color = Color.Gray) },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ─── Campo “Email” ───
+            // Email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                placeholder = { Text(text = "Email", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                placeholder = { Text("Email", color = Color.Gray) },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
@@ -102,14 +84,12 @@ fun CreateAccountScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ─── Campo “Password” ───
+            // Password
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = { Text(text = "Password", color = Color.Gray) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                placeholder = { Text("Password", color = Color.Gray) },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
@@ -118,102 +98,58 @@ fun CreateAccountScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ─── Checkbox “I Agree to the Terms of Service and Privacy Policy” ───
+            // Términos y condiciones
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable { agreed = !agreed }
-                    .padding(vertical = 8.dp)
+                modifier = Modifier.clickable { agreed = !agreed }.padding(vertical = 8.dp)
             ) {
-                Checkbox(
-                    checked = agreed,
-                    onCheckedChange = { agreed = it },
-                    modifier = Modifier.size(20.dp)
-                )
+                Checkbox(checked = agreed, onCheckedChange = { agreed = it }, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "I Agree to the Terms of Service and Privacy Policy",
+                    "I Agree to the Terms of Service and Privacy Policy",
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                    color = Color(0xFF4C2AED), // morado
+                    color = Color(0xFF4C2AED),
                     modifier = Modifier.weight(1f)
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ─── Texto “Have an account? Login” ───
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Have an account? ",
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                    color = Color.Black
-                )
-                Text(
-                    text = "Login",
-                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                    color = Color(0xFF4C2AED),
-                    modifier = Modifier
-                        .clickable { onLoginClick() }
-                )
+            // Ir a login
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text("Have an account? ", fontSize = 12.sp)
+                Text("Login", fontSize = 12.sp, color = Color(0xFF4C2AED), modifier = Modifier.clickable { onLoginClick() })
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ─── Botón “Get Started” ───
+            // Botón
             Button(
                 onClick = {
-                    onCreateAccountClick(
-                        fullName.trim(),
-                        email.trim(),
-                        password,
-                        agreed
-                    )
+                    onCreateAccountClick(fullName.trim(), email.trim(), password, agreed)
                 },
                 enabled = !uiState.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(24.dp)
-                    )
+                    CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp, modifier = Modifier.size(24.dp))
                 } else {
-                    Text(
-                        text = "Get Started",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
-                        color = Color.White
-                    )
+                    Text("Get Started", fontSize = 16.sp, color = Color.White)
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // ─── Mensaje de error (si existe) ───
-            uiState.errorMessage?.let { error ->
+            // Error
+            uiState.errorMessage?.let {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = "Error",
-                        tint = Color.Red,
-                        modifier = Modifier.size(20.dp)
-                    )
+                    Icon(Icons.Default.Warning, contentDescription = "Error", tint = Color.Red, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
-                        color = Color.Red
-                    )
+                    Text(text = it, fontSize = 12.sp, color = Color.Red)
                 }
             }
         }

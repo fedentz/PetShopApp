@@ -1,38 +1,44 @@
 package com.fedenintzel.petshopapp.presentation.login
 
 import androidx.compose.runtime.Composable
-import com.fedenintzel.petshopapp.presentation.viewmodel.LoginUiState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 
 /**
- * Container que expone directamente loginViewModel.uiState (que es un Compose State)
- * y lo pasa a LoginScreen, junto con las lambdas de acción.
+ * Container que conecta el LoginViewModel con la UI de LoginScreen.
+ * Encapsula la navegación y acciones del login.
  */
 @Composable
 fun LoginScreenContainer(
-    loginViewModel: LoginViewModel,
-    onLoginClick: (String, String) -> Unit,
-    onCreateAccountClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    uiState: LoginUiState
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    // 1) Leemos directamente el uiState que ya es un State<LoginUiState>
-    val loginUiState: LoginUiState = loginViewModel.uiState
+    val uiState = viewModel.uiState.value
 
-    // 2) Llamamos a la pantalla composable pasando uiState y las actions
-//    LoginScreen(
-//        uiState = loginUiState,
-//        onLoginClick = { email, password ->
-//            onLoginClick(email, password)
-//        },
-//        onCreateAccountClick = {
-//            onCreateAccountClick()
-//        }
-//    )
     LoginScreen(
-        uiState = loginUiState,
-        onLoginClick = onLoginClick,
-        onCreateAccountClick = onCreateAccountClick,
-        onForgotPasswordClick = onForgotPasswordClick
+        uiState = uiState,
+
+        // Callback cuando el usuario presiona "Get Started"
+        onLoginClick = { username, password ->
+            viewModel.login(username, password)
+        },
+
+        // Callback para navegar a la pantalla de registro
+        onCreateAccountClick = {
+            navController.navigate("register")
+        },
+
+        // 🆕 Callback para ir a forgot password
+        onForgotPasswordClick = {
+            navController.navigate("forgot")
+        },
+
+        // Si el login fue exitoso, navegar a la home
+        onSuccessLogin = {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
     )
 }

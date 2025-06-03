@@ -7,18 +7,14 @@ package com.fedenintzel.petshopapp.data.remote.dto
  *   "id": 101,
  *   "firstName": "Julio",
  *   "lastName": "Cesar",
- *   "username": "julio.cesar",
  *   "email": "julio.cesar@mail.com",
- *   "password": "contraseña123",
- *   "token": "eyJhbGciOiJIUzI1..."
+ *   "age" : 30
  * }
  */
 data class RegisterResponse(
     val id: Int,
     val firstName: String,
     val lastName: String,
-    val username: String,
     val email: String,
-    val password: String,
-    val token: String
+    val age: Int
 )

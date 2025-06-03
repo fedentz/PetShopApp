@@ -2,9 +2,8 @@ package com.fedenintzel.petshopapp.di
 
 
 import android.content.Context
-import android.provider.Settings.Global.getString
 import com.fedenintzel.petshopapp.R
-import com.fedenintzel.petshopapp.data.remote.AuthApiService
+import com.fedenintzel.petshopapp.data.remote.api.AuthApiService
 import com.fedenintzel.petshopapp.data.remote.api.CartApiService
 import com.fedenintzel.petshopapp.data.remote.api.ProductApiService
 import dagger.Module
@@ -71,4 +70,6 @@ object NetworkModule {
     @Singleton
     fun provideProductApiService(retrofit: Retrofit): ProductApiService =
         retrofit.create(ProductApiService::class.java)
+
+
 }
