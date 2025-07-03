@@ -1,29 +1,44 @@
 package com.fedenintzel.petshopapp.data.repository
 
-import com.fedenintzel.petshopapp.data.mapper.toDomain
-import com.fedenintzel.petshopapp.data.remote.AuthRemoteDataSource
 import com.fedenintzel.petshopapp.domain.model.User
 import com.fedenintzel.petshopapp.domain.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImp @Inject constructor(
-    private val remoteDataSource: AuthRemoteDataSource
+    private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
 
     override suspend fun login(username: String, password: String): User {
-        val response = remoteDataSource.login(username, password)
-        return response.toDomain()
+        val result = firebaseAuth.signInWithEmailAndPassword(username, password).await()
+        val firebaseUser = result.user ?: throw Exception("Usuario no encontrado")
+
+        return User(
+            id = firebaseUser.uid,
+            username = firebaseUser.displayName ?:"",
+            email = firebaseUser.email ?: "",
+            image = firebaseUser.photoUrl?.toString() ?: "",
+            fullName = firebaseUser.displayName ?: "",
+
+        )
     }
 
     override suspend fun register(
-        firstName: String,
-        lastName: String,
+        fullName: String,
         username: String,
         email: String,
         password: String
     ): User {
-        val response = remoteDataSource.register(firstName, lastName, username, email, password)
-        return response.toDomain()
-    }
+        val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
+        val firebaseUser = result.user ?: throw Exception("Error en registro")
 
+        // Acá deberíamos guardar el fullName y userName en Firestore, asociados al usuario
+
+        return User(
+            id = firebaseUser.uid,
+            username = firebaseUser.displayName ?:"",
+            email = firebaseUser.email ?: ""
+        )
+    }
 }

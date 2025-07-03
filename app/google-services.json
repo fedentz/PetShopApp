@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30514927768",
+    "project_id": "finaltp3-f1135",
+    "storage_bucket": "finaltp3-f1135.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30514927768:android:8481eaa025d7440e8158ed",
+        "android_client_info": {
+          "package_name": "com.fedenintzel.petshopapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBohfmQhsUsQMhY94xkN5jYt2KjYwl_9xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

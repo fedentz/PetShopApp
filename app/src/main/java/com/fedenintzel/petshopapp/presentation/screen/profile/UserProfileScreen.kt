@@ -19,6 +19,8 @@ import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 /**
@@ -38,11 +40,14 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 fun UserProfileScreen(
     navController: NavController,
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
-    productsViewModel: ProductsViewModel = hiltViewModel()
+    productsViewModel: ProductsViewModel = hiltViewModel(),
+    viewModel: SessionViewModel = hiltViewModel()
+
 ) {
     val favoriteProducts by favoritesViewModel.favorites.collectAsState()
+    val user = viewModel.currentUser.value
 
-    Scaffold(
+   Scaffold(
         bottomBar = {
             BottomBar(
                 selected = BottomBarItem.PROFILE,
@@ -80,7 +85,7 @@ fun UserProfileScreen(
             ProfileHeader(
                 backgroundPainter = painterResource(id = R.drawable.profile_background),
                 profileImage = painterResource(id = R.drawable.profile_avatar),
-                userName = "Abduldul"
+                userName = user?.email?.substringBefore("@") ?:"Invitado"
             )
 
             Spacer(modifier = Modifier.height(16.dp))

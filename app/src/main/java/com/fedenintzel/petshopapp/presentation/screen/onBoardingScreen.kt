@@ -75,13 +75,7 @@ fun Title() {
         fontFamily = Poppins,
         fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
-        style = TextStyle(
-            shadow = Shadow(
-                color = Color(0x80000000), // 50% negro
-                offset = Offset(0f, 6f),   // drop hacia abajo
-                blurRadius = 12f           // más difuminado
-            )
-        )
+
     )
 }
 
