@@ -3,11 +3,13 @@ package com.fedenintzel.petshopapp.data.repository
 import com.fedenintzel.petshopapp.domain.model.User
 import com.fedenintzel.petshopapp.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImp @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) : AuthRepository {
 
     override suspend fun login(username: String, password: String): User {
@@ -34,6 +36,8 @@ class AuthRepositoryImp @Inject constructor(
         val firebaseUser = result.user ?: throw Exception("Error en registro")
 
         // Acá deberíamos guardar el fullName y userName en Firestore, asociados al usuario
+
+
 
         return User(
             id = firebaseUser.uid,
