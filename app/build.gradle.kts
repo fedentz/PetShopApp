@@ -53,6 +53,7 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     // — Retrofit & OkHttp —
     implementation(libs.retrofit)

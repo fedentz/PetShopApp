@@ -6,6 +6,7 @@ import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.data.remote.api.CartApiService
 import com.fedenintzel.petshopapp.data.remote.api.ProductApiService
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -79,6 +80,12 @@ object NetworkModule {
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+    /**
+     * Provee una instancia de Firebase DB
+     */
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
 }
