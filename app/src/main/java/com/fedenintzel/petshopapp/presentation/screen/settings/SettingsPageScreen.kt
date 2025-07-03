@@ -49,6 +49,7 @@ import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable
 fun SettingsPageScreen(
+
     navController: NavController,
     categories: List<SettingsCategory> = FakeSettingsDataProvider.getSettingsCategories(),
     onBackClick: () -> Unit,

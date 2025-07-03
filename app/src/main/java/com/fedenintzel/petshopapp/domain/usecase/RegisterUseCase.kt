@@ -16,8 +16,7 @@ class RegisterUseCase @Inject constructor(
         val username = email.substringBefore("@")
 
         return repository.register(
-            firstName = firstName,
-            lastName = lastName,
+            fullName = fullName,
             username = username,
             email = email,
             password = password
