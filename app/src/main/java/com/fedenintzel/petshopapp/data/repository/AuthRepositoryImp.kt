@@ -16,6 +16,7 @@ class AuthRepositoryImp @Inject constructor(
         val result = firebaseAuth.signInWithEmailAndPassword(username, password).await()
         val firebaseUser = result.user ?: throw Exception("Usuario no encontrado")
 
+
         return User(
             id = firebaseUser.uid,
             username = firebaseUser.displayName ?:"",
@@ -30,19 +31,55 @@ class AuthRepositoryImp @Inject constructor(
         fullName: String,
         username: String,
         email: String,
-        password: String
+        password: String,
+        firstName: String,
+        lastName: String
     ): User {
         val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
         val firebaseUser = result.user ?: throw Exception("Error en registro")
 
-        // Acá deberíamos guardar el fullName y userName en Firestore, asociados al usuario
+        // Acá deberíamos guardar el fullName, userName, etc en Firestore, asociados al usuario
 
+        val userData = mapOf(
+            "firstName" to firstName,
+            "lastName" to lastName,
+            "username" to username,
+            "email" to email,
+            "image" to firebaseUser.photoUrl?.toString().orEmpty(),
+            "createdAt" to System.currentTimeMillis()
+        )
 
+        firestore.collection("users")
+            .document(firebaseUser.uid)
+            .set(userData)
+            .await() // bloqueamos hasta que se guarde correctamente
 
         return User(
             id = firebaseUser.uid,
-            username = firebaseUser.displayName ?:"",
-            email = firebaseUser.email ?: ""
+            username = username,
+            email = email,
+            fullName = "$firstName $lastName",
+            image = firebaseUser.photoUrl?.toString().orEmpty(),
+            firstName = firstName,
+            lastName = lastName
+        )
+    }
+
+    override suspend fun getCurrentUser(): User {
+        val uid = firebaseAuth.currentUser?.uid ?: throw Exception("Usuario no logueado")
+        val snapshot = firestore.collection("users").document(uid).get().await()
+        val userData = snapshot.toObject(User::class.java)
+            ?: throw Exception("Datos del usuario no encontrados")
+
+        return User(
+            id = uid,
+            username = userData.username,
+            email = userData.email,
+            fullName = "${userData.firstName} ${userData.lastName}",
+            image = userData.image,
+            firstName = userData.firstName,
+            lastName = userData.lastName
         )
     }
 }
+

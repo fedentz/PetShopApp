@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
 import com.fedenintzel.petshopapp.domain.model.settings.SettingsCategory
@@ -18,6 +19,7 @@ import com.fedenintzel.petshopapp.domain.model.settings.SettingsItem
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.SettingsBaseScreen
 import com.fedenintzel.petshopapp.presentation.components.SettingsItemRow
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 /**
@@ -55,12 +57,17 @@ fun SettingsPageScreen(
     onBackClick: () -> Unit,
     onItemClick: (SettingsItem) -> Unit
 ) {
+    val sessionViewModel: SessionViewModel = hiltViewModel()
+
     SettingsBaseScreen(
         title = "Settings Page",
         onBackClick = onBackClick,
         showBottomButton = true,
         bottomButtonText = "Log Out",
-        onBottomButtonClick = {navController.navigate(Destinations.LOGIN)},
+        onBottomButtonClick = {
+            sessionViewModel.logout()
+            navController.navigate(Destinations.LOGIN) {popUpTo(0) }
+                              },
         bottomButtonFilled = false
     ) {
         Column(

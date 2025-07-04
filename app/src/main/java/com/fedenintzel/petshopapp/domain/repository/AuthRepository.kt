@@ -9,6 +9,10 @@ interface AuthRepository {
         fullName: String,
         username: String,
         email: String,
-        password: String
+        password: String,
+        firstName: String,
+        lastName: String
     ): User
+
+    suspend fun getCurrentUser(): User
 }
