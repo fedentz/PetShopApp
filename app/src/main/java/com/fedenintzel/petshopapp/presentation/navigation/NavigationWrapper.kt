@@ -76,6 +76,7 @@ fun NavigationWrapper(
             // Onboarding
             composable(Destinations.ONBOARDING) {
                 OnBoardingScreen(
+                    navController = navController,
                     onContinue = {
                         navController.navigate(Destinations.LOGIN) {
                             popUpTo(Destinations.ONBOARDING) { inclusive = true }

@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -32,12 +34,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.fedenintzel.petshopapp.R
+import com.fedenintzel.petshopapp.presentation.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.coroutines.Continuation
 
 @Composable
-fun OnBoardingScreen(onContinue: () -> Unit) {
+fun OnBoardingScreen(
+    navController: NavController,
+    onContinue: () -> Unit,
+    sessionViewModel: SessionViewModel = hiltViewModel()
+) {
+    // Si ya tenemos una sesión de usuario activa, navega directamente a HOME
+
+       val isLoggedIn = sessionViewModel.isLoggedIn.value
+       LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn == true) {
+            sessionViewModel.checkSession()
+            navController.navigate(Destinations.HOME) {
+                popUpTo(Destinations.ONBOARDING) { inclusive = true }
+            }
+        }
+    }
+
     Box(modifier = Modifier
         .background(Color.White)
         .fillMaxSize()) {
@@ -60,7 +84,10 @@ fun OnBoardingScreen(onContinue: () -> Unit) {
                 Spacer(modifier = Modifier.height(32.dp))
                 CarrouselDots()
                 Spacer(modifier = Modifier.height(32.dp))
-                GetStartedButton(onClick = onContinue)
+                GetStartedButton(
+                    onClick = onContinue,
+                    enabled = !isLoggedIn!!
+                )
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -76,7 +103,7 @@ fun Title() {
         fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
 
-    )
+        )
 }
 
 @Composable
@@ -140,9 +167,12 @@ fun CarrouselDots() {
 }
 
 @Composable
-fun GetStartedButton(onClick: () -> Unit) {
+fun GetStartedButton(
+    onClick: () -> Unit,
+    enabled: Boolean) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7140FD)),
         modifier = Modifier
@@ -163,5 +193,9 @@ fun GetStartedButton(onClick: () -> Unit) {
 @Composable
 @Preview
 fun PreviewOnBoardingScreen() {
-    OnBoardingScreen(onContinue = {})
+    val fakeNavController = rememberNavController()
+    OnBoardingScreen(
+        navController = fakeNavController,
+        onContinue = {}
+    )
 }

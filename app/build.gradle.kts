@@ -69,6 +69,7 @@ dependencies {
     // — Hilt —
     implementation(libs.hilt.android)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 

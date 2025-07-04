@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,6 +46,11 @@ fun UserProfileScreen(
 ) {
     val favoriteProducts by favoritesViewModel.favorites.collectAsState()
     val user = viewModel.user.value
+    LaunchedEffect(user) {
+        Log.d("UserProfile", "Usuario actual: $user")
+    }
+
+
 
    Scaffold(
         bottomBar = {

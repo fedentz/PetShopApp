@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +20,7 @@ import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @JvmOverloads
 @Composable
@@ -27,6 +29,9 @@ fun HomeScreen(
     viewModel: ProductsViewModel = hiltViewModel(),
     cartViewModel: CartViewModel = hiltViewModel()
 ) {
+    val user = FirebaseAuth.getInstance().currentUser
+    Log.d("Home", "Usuario actual: ${user}")
+
     val state by viewModel.state.collectAsState()
     val showSnackbar by cartViewModel.showSnackbar
     val snackbarHostState = remember { SnackbarHostState() }
