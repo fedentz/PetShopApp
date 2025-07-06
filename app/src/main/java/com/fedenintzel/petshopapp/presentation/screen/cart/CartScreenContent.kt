@@ -217,8 +217,13 @@ fun CartScreenContent(
                                 }
                             }
 
+//                            Button(
+//                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
                             Button(
-                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
+                                onClick = {
+                                    state.cart?.let { viewModel.guardarCarritoEnFirestore(it) }
+                                    navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD)
+                                },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7140FD)),
                                 shape = RoundedCornerShape(32.dp),
                                 modifier = Modifier
