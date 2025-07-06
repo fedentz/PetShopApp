@@ -41,11 +41,17 @@ class CartViewModel @Inject constructor(
             .add(cart)
             .addOnSuccessListener {
                 Log.d("Firestore", "Carrito guardado con éxito.")
+                _state.value = _state.value.copy(carritoGuardado = true)
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al guardar carrito", e)
             }
     }
+
+    fun resetSnackbar() {
+        _state.value = _state.value.copy(carritoGuardado = false)
+    }
+
 
     private fun loadCart() {
         viewModelScope.launch {
