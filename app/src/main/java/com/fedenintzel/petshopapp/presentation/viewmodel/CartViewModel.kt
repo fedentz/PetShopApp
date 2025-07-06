@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.domain.usecase.GetCartUseCase
@@ -8,7 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 import com.fedenintzel.petshopapp.data.mapper.toCartItem
+import com.fedenintzel.petshopapp.domain.model.Cart
 import com.fedenintzel.petshopapp.domain.model.Product
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +22,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val getCartUseCase: GetCartUseCase
+    private val getCartUseCase: GetCartUseCase,
+    private val firestore: FirebaseFirestore
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CartUiState())
@@ -30,6 +34,17 @@ class CartViewModel @Inject constructor(
 
     init {
         loadCart()
+    }
+
+    fun guardarCarritoEnFirestore(cart: Cart) {
+        firestore.collection("carritos")
+            .add(cart)
+            .addOnSuccessListener {
+                Log.d("Firestore", "Carrito guardado con éxito.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firestore", "Error al guardar carrito", e)
+            }
     }
 
     private fun loadCart() {
