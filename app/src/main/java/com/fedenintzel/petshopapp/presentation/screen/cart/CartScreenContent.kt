@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.cart
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -239,6 +240,7 @@ fun CartScreenContent(
                                     Button(
                                         onClick = {
                                             state.cart?.let { viewModel.guardarCarritoEnFirestore(it) }
+                                            Log.d("DEBUG_CHECKOUT", "Carrito a guardar: $cart")
                                             navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD)
                                         },
                                         colors = ButtonDefaults.buttonColors(

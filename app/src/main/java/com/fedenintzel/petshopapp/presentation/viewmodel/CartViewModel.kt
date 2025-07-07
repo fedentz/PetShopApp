@@ -82,6 +82,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun addToCart(product: Product) {
+        Log.d("DEBUG_ADD", "Agregando producto al carrito: $product")
         val currentCart = _state.value.cart
         val currentProducts = currentCart?.products?.toMutableList() ?: mutableListOf()
 
