@@ -42,6 +42,7 @@ class CartViewModel @Inject constructor(
             .addOnSuccessListener {
                 Log.d("Firestore", "Carrito guardado con éxito.")
                 _state.value = _state.value.copy(carritoGuardado = true)
+                limpiarCarrito()
             }
             .addOnFailureListener { e ->
                 Log.e("Firestore", "Error al guardar carrito", e)
@@ -53,19 +54,48 @@ class CartViewModel @Inject constructor(
     }
 
 
-    private fun loadCart() {
-        viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, error = null)
-            try {
-                val cart = getCartUseCase()
-                _state.value = _state.value.copy(cart = cart)
-            } catch (e: Exception) {
-                _state.value = _state.value.copy(error = e.message ?: "Error desconocido")
-            } finally {
-                _state.value = _state.value.copy(isLoading = false)
-            }
-        }
+//    private fun loadCart() {
+//        viewModelScope.launch {
+//            _state.value = _state.value.copy(isLoading = true, error = null)
+//            try {
+//                val cart = getCartUseCase()
+//                _state.value = _state.value.copy(cart = cart)
+//            } catch (e: Exception) {
+//                _state.value = _state.value.copy(error = e.message ?: "Error desconocido")
+//            } finally {
+//                _state.value = _state.value.copy(isLoading = false)
+//            }
+//        }
+//    }
+
+    fun limpiarCarrito() {
+        _state.value = _state.value.copy(
+            cart = Cart(
+                id = 1,
+                products = emptyList(),
+                total = 0.0,
+                discountedTotal = 0.0,
+                totalProducts = 0,
+                totalQuantity = 0,
+                userId = 1
+            )
+        )
     }
+
+    private fun loadCart() {
+        _state.value = _state.value.copy(
+            cart = Cart(
+                id = 1,
+                products = emptyList(),
+                total = 0.0,
+                discountedTotal = 0.0,
+                totalProducts = 0,
+                totalQuantity = 0,
+                userId = 1
+            )
+        )
+    }
+
 
     fun removeFromCart(productId: Int) {
         val currentCart = _state.value.cart ?: return
