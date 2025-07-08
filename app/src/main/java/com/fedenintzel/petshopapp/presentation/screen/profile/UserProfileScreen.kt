@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -20,7 +21,6 @@ import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 
 /**
@@ -41,11 +41,16 @@ fun UserProfileScreen(
     navController: NavController,
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     productsViewModel: ProductsViewModel = hiltViewModel(),
-    viewModel: SessionViewModel = hiltViewModel()
+    sessionViewModel: SessionViewModel
 
 ) {
     val favoriteProducts by favoritesViewModel.favorites.collectAsState()
-    val user = viewModel.currentUser.value
+    val user = sessionViewModel.user.value
+    LaunchedEffect(user) {
+        Log.d("UserProfile", "Usuario actual: $user")
+    }
+
+
 
    Scaffold(
         bottomBar = {
@@ -85,7 +90,7 @@ fun UserProfileScreen(
             ProfileHeader(
                 backgroundPainter = painterResource(id = R.drawable.profile_background),
                 profileImage = painterResource(id = R.drawable.profile_avatar),
-                userName = user?.email?.substringBefore("@") ?:"Invitado"
+                userName = user?.firstName ?:"User"
             )
 
             Spacer(modifier = Modifier.height(16.dp))

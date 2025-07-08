@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 
 /**
  * Container que conecta el LoginViewModel con la UI de LoginScreen.
@@ -13,7 +14,8 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
 @Composable
 fun LoginScreenContainer(
     navController: NavController,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
 ) {
     val uiState = viewModel.uiState.value
 
@@ -37,6 +39,7 @@ fun LoginScreenContainer(
 
         // Si el login fue exitoso, navegar a la home
         onSuccessLogin = {
+            sessionViewModel.checkSession()
             navController.navigate(Destinations.HOME) {
                 popUpTo(Destinations.LOGIN) { inclusive = true }
             }

@@ -19,7 +19,9 @@ class RegisterUseCase @Inject constructor(
             fullName = fullName,
             username = username,
             email = email,
-            password = password
+            password = password,
+            firstName = firstName,
+            lastName = lastName
         )
     }
 

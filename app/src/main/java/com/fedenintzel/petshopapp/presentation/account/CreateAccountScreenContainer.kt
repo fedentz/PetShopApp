@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -20,7 +21,9 @@ import kotlinx.coroutines.launch
 fun CreateAccountScreenContainer(
     onLoginClick: () -> Unit,
     navController: NavController,
-    viewModel: CreateAccountViewModel = hiltViewModel()
+    viewModel: CreateAccountViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
+
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -31,6 +34,7 @@ fun CreateAccountScreenContainer(
         if (uiState.isSuccess) {
             coroutineScope.launch {
                 snackbarHostState.showSnackbar("Registration successful")
+                sessionViewModel.checkSession() // Fuerza la recarga del usuario completo desde firestore
                 navController.navigate(Destinations.HOME) {
                     popUpTo("register") { inclusive = true }
                 }

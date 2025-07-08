@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,14 +20,19 @@ import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @JvmOverloads
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: ProductsViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    cartViewModel: CartViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
 ) {
+
+
     val state by viewModel.state.collectAsState()
     val showSnackbar by cartViewModel.showSnackbar
     val snackbarHostState = remember { SnackbarHostState() }
