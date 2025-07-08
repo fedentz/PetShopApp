@@ -41,11 +41,11 @@ fun UserProfileScreen(
     navController: NavController,
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
     productsViewModel: ProductsViewModel = hiltViewModel(),
-    viewModel: SessionViewModel = hiltViewModel()
+    sessionViewModel: SessionViewModel
 
 ) {
     val favoriteProducts by favoritesViewModel.favorites.collectAsState()
-    val user = viewModel.user.value
+    val user = sessionViewModel.user.value
     LaunchedEffect(user) {
         Log.d("UserProfile", "Usuario actual: $user")
     }

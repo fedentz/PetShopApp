@@ -55,9 +55,10 @@ fun SettingsPageScreen(
     navController: NavController,
     categories: List<SettingsCategory> = FakeSettingsDataProvider.getSettingsCategories(),
     onBackClick: () -> Unit,
-    onItemClick: (SettingsItem) -> Unit
+    onItemClick: (SettingsItem) -> Unit,
+    sessionViewModel: SessionViewModel
+
 ) {
-    val sessionViewModel: SessionViewModel = hiltViewModel()
 
     SettingsBaseScreen(
         title = "Settings Page",

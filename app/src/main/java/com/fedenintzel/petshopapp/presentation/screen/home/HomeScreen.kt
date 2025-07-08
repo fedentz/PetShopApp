@@ -20,6 +20,7 @@ import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @JvmOverloads
@@ -27,10 +28,10 @@ import com.google.firebase.auth.FirebaseAuth
 fun HomeScreen(
     navController: NavController,
     viewModel: ProductsViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    cartViewModel: CartViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
 ) {
-    val user = FirebaseAuth.getInstance().currentUser
-    Log.d("Home", "Usuario actual: ${user}")
+
 
     val state by viewModel.state.collectAsState()
     val showSnackbar by cartViewModel.showSnackbar

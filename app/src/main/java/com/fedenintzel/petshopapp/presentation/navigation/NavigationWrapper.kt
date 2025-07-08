@@ -5,6 +5,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,12 +43,13 @@ import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsNotificat
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPrivacyScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsSecurityScreen
+import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun NavigationWrapper(
-
+    sessionViewModel: SessionViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -63,7 +65,8 @@ fun NavigationWrapper(
                         navController.navigate(SETTINGS)
                     }
                 },
-                navController = navController
+                navController = navController,
+                sessionViewModel = sessionViewModel
             )
         }
     )
@@ -77,6 +80,7 @@ fun NavigationWrapper(
             composable(Destinations.ONBOARDING) {
                 OnBoardingScreen(
                     navController = navController,
+                    sessionViewModel = sessionViewModel,
                     onContinue = {
                         navController.navigate(Destinations.LOGIN) {
                             popUpTo(Destinations.ONBOARDING) { inclusive = true }
@@ -91,7 +95,8 @@ fun NavigationWrapper(
 
                 LoginScreenContainer(
 
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             }
 
@@ -103,7 +108,8 @@ fun NavigationWrapper(
                    onLoginClick = {
                         navController.popBackStack(Destinations.LOGIN, false)
                     },
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             }
 
@@ -123,7 +129,9 @@ fun NavigationWrapper(
 
             // Home
             composable(HomeDestinations.HOME) {
-                HomeScreen(navController = navController)
+                HomeScreen(
+                    navController = navController,
+                    sessionViewModel = sessionViewModel)
             }
             composable(HomeDestinations.NOTIFICATIONS) {
                 NotificationsScreen(onBack = { navController.popBackStack() })
@@ -164,7 +172,8 @@ fun NavigationWrapper(
 
                         route?.let { navController.navigate(it) }
                     },
-                    navController = navController                )
+                    navController = navController,
+                    sessionViewModel = sessionViewModel)
             }
 
             // Cart
@@ -174,7 +183,10 @@ fun NavigationWrapper(
 
             //User Profile
             composable(Destinations.USER_PROFILE) {
-                UserProfileScreen(navController = navController)
+                UserProfileScreen(
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
+                )
             }
 
             //Seller Profile

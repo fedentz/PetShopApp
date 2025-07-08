@@ -15,7 +15,7 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
 fun LoginScreenContainer(
     navController: NavController,
     viewModel: LoginViewModel = hiltViewModel(),
-    sessionViewModel: SessionViewModel = hiltViewModel()
+    sessionViewModel: SessionViewModel
 ) {
     val uiState = viewModel.uiState.value
 

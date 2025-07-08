@@ -21,10 +21,10 @@ import kotlinx.coroutines.launch
 fun CreateAccountScreenContainer(
     onLoginClick: () -> Unit,
     navController: NavController,
-    viewModel: CreateAccountViewModel = hiltViewModel()
+    viewModel: CreateAccountViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
 
 ) {
-    val sessionViewModel: SessionViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()

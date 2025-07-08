@@ -48,7 +48,7 @@ import kotlin.coroutines.Continuation
 fun OnBoardingScreen(
     navController: NavController,
     onContinue: () -> Unit,
-    sessionViewModel: SessionViewModel = hiltViewModel()
+    sessionViewModel: SessionViewModel
 ) {
     // Si ya tenemos una sesión de usuario activa, navega directamente a HOME
 
@@ -194,8 +194,10 @@ fun GetStartedButton(
 @Preview
 fun PreviewOnBoardingScreen() {
     val fakeNavController = rememberNavController()
+    val sessionViewModel: SessionViewModel = hiltViewModel()
     OnBoardingScreen(
         navController = fakeNavController,
-        onContinue = {}
+        onContinue = {},
+        sessionViewModel = sessionViewModel
     )
 }
