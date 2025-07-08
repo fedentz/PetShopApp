@@ -1,10 +1,13 @@
 package com.fedenintzel.petshopapp.presentation.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,9 +45,11 @@ import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsNotificat
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPrivacyScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsSecurityScreen
+import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun NavigationWrapper(
 
@@ -167,9 +172,26 @@ fun NavigationWrapper(
             }
 
             // Cart
+//            composable(Destinations.CART) {
+//                 CartScreenContent(navController = navController)
+//            }
+//            composable(Destinations.CART) {
+//                val cartViewModel: CartViewModel = hiltViewModel(navController.getBackStackEntry(HomeDestinations.HOME))
+//                CartScreenContent(
+//                    navController = navController,
+//                    viewModel = cartViewModel
+//                )
+//            }
             composable(Destinations.CART) {
-                 CartScreenContent(navController = navController)
+                val parentEntry = remember { navController.getBackStackEntry(HomeDestinations.HOME) }
+                val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
+
+                CartScreenContent(
+                    navController = navController,
+                    viewModel = cartViewModel
+                )
             }
+
 
             //User Profile
             composable(Destinations.USER_PROFILE) {

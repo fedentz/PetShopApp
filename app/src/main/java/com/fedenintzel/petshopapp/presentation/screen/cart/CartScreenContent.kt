@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.cart
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,222 +37,258 @@ fun CartScreenContent(
     val state = viewModel.state.value
     var itemToRemove by remember { mutableStateOf<Int?>(null) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        when {
-            state.isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-            state.error != null -> {
-                Text(
-                    text = state.error,
-                    color = Color.Red,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
 
-            state.cart != null -> {
-                val cart = state.cart
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
 
-                Column(modifier = Modifier.fillMaxSize()) {
-                    //  Top bar
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                WindowInsets.safeDrawing.only(WindowInsetsSides.Top).asPaddingValues()
-                            )
-                            .padding(vertical = 12.dp, horizontal = 16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        IconButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier
-                                .size(46.dp)
-                                .shadow(
-                                    elevation = 10.dp,
-                                    shape = RoundedCornerShape(16.dp),
-                                    clip = false,
-                                    ambientColor = Color(0x33000000),
-                                    spotColor = Color(0x33000000)
-                                )
-                                .background(Color.White, shape = RoundedCornerShape(16.dp))
-                                .clip(RoundedCornerShape(16.dp))
-                                .align(Alignment.CenterStart)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.arrow_left),
-                                contentDescription = "Back"
-                            )
-                        }
-
-                        Text(
-                            text = "Cart",
-                            fontFamily = Poppins,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black
+            Box(modifier = Modifier.fillMaxSize()) {
+                when {
+                    state.isLoading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
 
-                    //  Lista de productos
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(cart.products, key = { it.id }) { product ->
-                            val density = LocalDensity.current
-                            val dismissState = rememberSwipeToDismissBoxState(
-                                positionalThreshold = {
-                                    with(density) { 100.dp.toPx() }
-                                },
-                                confirmValueChange = { value ->
-                                    if (value == SwipeToDismissBoxValue.EndToStart) {
-                                        itemToRemove = product.id
-                                        false
-                                    } else false
-                                }
-                            )
-
-                            SwipeToDismissBox(
-                                state = dismissState,
-                                backgroundContent = {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(Color(0xFFF8F8F8), shape = RoundedCornerShape(16.dp)),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(id = R.drawable.ic_trash),
-                                            contentDescription = "Delete",
-                                            tint = Color.Red,
-                                            modifier = Modifier.padding(end = 24.dp)
-                                        )
-                                    }
-                                },
-                                content = {
-                                    CartItemCard(
-                                        imageUrl = product.thumbnail,
-                                        title = product.title,
-                                        subtitle = "Qty: ${product.quantity}",
-                                        price = product.price
-                                    )
-                                }
-                            )
-                        }
+                    state.error != null -> {
+                        Text(
+                            text = state.error,
+                            color = Color.Red,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
 
-                    //  Panel inferior
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(245.dp)
-                            .padding(bottom = 12.dp),
-                        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                        color = Color.White,
-                        shadowElevation = 8.dp
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 24.dp, vertical = 24.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        "${cart.totalProducts} Items",
-                                        fontSize = 12.sp,
-                                        fontFamily = Poppins,
-                                        color = Color(0xFFB3B1B0)
+                    state.cart != null -> {
+                        val cart = state.cart
+
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            //  Top bar
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+                                            .asPaddingValues()
                                     )
-                                    Text(
-                                        "$${"%.2f".format(cart.total)}",
-                                        fontSize = 12.sp,
-                                        fontFamily = Poppins,
-                                        color = Color(0xFFB3B1B0)
+                                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                IconButton(
+                                    onClick = { navController.popBackStack() },
+                                    modifier = Modifier
+                                        .size(46.dp)
+                                        .shadow(
+                                            elevation = 10.dp,
+                                            shape = RoundedCornerShape(16.dp),
+                                            clip = false,
+                                            ambientColor = Color(0x33000000),
+                                            spotColor = Color(0x33000000)
+                                        )
+                                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .align(Alignment.CenterStart)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.arrow_left),
+                                        contentDescription = "Back"
                                     )
                                 }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        "Tax",
-                                        fontSize = 12.sp,
-                                        fontFamily = Poppins,
-                                        color = Color(0xFFB3B1B0)
+
+                                Text(
+                                    text = "Cart",
+                                    fontFamily = Poppins,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    color = Color.Black
+                                )
+                            }
+
+                            //  Lista de productos
+                            LazyColumn(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(cart.products, key = { it.id }) { product ->
+                                    val density = LocalDensity.current
+                                    val dismissState = rememberSwipeToDismissBoxState(
+                                        positionalThreshold = {
+                                            with(density) { 100.dp.toPx() }
+                                        },
+                                        confirmValueChange = { value ->
+                                            if (value == SwipeToDismissBoxValue.EndToStart) {
+                                                itemToRemove = product.id
+                                                false
+                                            } else false
+                                        }
                                     )
-                                    Text(
-                                        "$1.99",
-                                        fontSize = 12.sp,
-                                        fontFamily = Poppins,
-                                        color = Color(0xFFB3B1B0)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        "Totals",
-                                        fontSize = 16.sp,
-                                        fontFamily = Poppins,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        "$${"%.2f".format(cart.discountedTotal)}",
-                                        fontSize = 24.sp,
-                                        fontFamily = Poppins,
-                                        fontWeight = FontWeight.SemiBold
+
+                                    SwipeToDismissBox(
+                                        state = dismissState,
+                                        backgroundContent = {
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .background(
+                                                        Color(0xFFF8F8F8),
+                                                        shape = RoundedCornerShape(16.dp)
+                                                    ),
+                                                contentAlignment = Alignment.CenterEnd
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.ic_trash),
+                                                    contentDescription = "Delete",
+                                                    tint = Color.Red,
+                                                    modifier = Modifier.padding(end = 24.dp)
+                                                )
+                                            }
+                                        },
+                                        content = {
+                                            CartItemCard(
+                                                imageUrl = product.thumbnail,
+                                                title = product.title,
+                                                subtitle = "Qty: ${product.quantity}",
+                                                price = product.price
+                                            )
+                                        }
                                     )
                                 }
                             }
 
-                            Button(
-                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7140FD)),
-                                shape = RoundedCornerShape(32.dp),
+                            //  Panel inferior
+                            Surface(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(54.dp)
+                                    .height(245.dp)
+                                    .padding(bottom = 12.dp),
+                                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                                color = Color.White,
+                                shadowElevation = 8.dp
                             ) {
-                                Text("Checkout", fontFamily = Poppins, color = Color.White)
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(horizontal = 24.dp, vertical = 24.dp),
+                                    verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                "${cart.totalProducts} Items",
+                                                fontSize = 12.sp,
+                                                fontFamily = Poppins,
+                                                color = Color(0xFFB3B1B0)
+                                            )
+                                            Text(
+                                                "$${"%.2f".format(cart.total)}",
+                                                fontSize = 12.sp,
+                                                fontFamily = Poppins,
+                                                color = Color(0xFFB3B1B0)
+                                            )
+                                        }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                "Tax",
+                                                fontSize = 12.sp,
+                                                fontFamily = Poppins,
+                                                color = Color(0xFFB3B1B0)
+                                            )
+                                            Text(
+                                                "$1.99",
+                                                fontSize = 12.sp,
+                                                fontFamily = Poppins,
+                                                color = Color(0xFFB3B1B0)
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(
+                                                "Totals",
+                                                fontSize = 16.sp,
+                                                fontFamily = Poppins,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            Text(
+                                                "$${"%.2f".format(cart.discountedTotal)}",
+                                                fontSize = 24.sp,
+                                                fontFamily = Poppins,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                        }
+                                    }
+
+//                            Button(
+//                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
+                                    Button(
+                                        onClick = {
+                                            state.cart?.let { viewModel.guardarCarritoEnFirestore(it) }
+                                            Log.d("DEBUG_CHECKOUT", "Carrito a guardar: $cart")
+                                            navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD)
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(
+                                                0xFF7140FD
+                                            )
+                                        ),
+                                        shape = RoundedCornerShape(32.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(54.dp)
+                                    ) {
+                                        Text("Checkout", fontFamily = Poppins, color = Color.White)
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
 
-        if (itemToRemove != null) {
-            AlertDialog(
-                onDismissRequest = { itemToRemove = null },
-                confirmButton = {
-                    TextButton(onClick = {
-                        itemToRemove?.let { viewModel.removeFromCart(it) }
-                        itemToRemove = null
-                    }) {
-                        Text("Delete")
+                if (itemToRemove != null) {
+                    AlertDialog(
+                        onDismissRequest = { itemToRemove = null },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                itemToRemove?.let { viewModel.removeFromCart(it) }
+                                itemToRemove = null
+                            }) {
+                                Text("Delete")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { itemToRemove = null }) {
+                                Text("Cancel")
+                            }
+                        },
+                        title = { Text("Delete product?") },
+                        text = { Text("Remove product from Cart?") }
+                    )
+                }
+
+                LaunchedEffect(state.carritoGuardado) {
+                    if (state.carritoGuardado) {
+                        snackbarHostState.showSnackbar("Carrito guardado con éxito")
+                        viewModel.resetSnackbar()
                     }
-                },
-                dismissButton = {
-                    TextButton(onClick = { itemToRemove = null }) {
-                        Text("Cancel")
-                    }
-                },
-                title = { Text("Delete product?") },
-                text = { Text("Remove product from Cart?") }
-            )
+                }
+            }
         }
     }
 }
