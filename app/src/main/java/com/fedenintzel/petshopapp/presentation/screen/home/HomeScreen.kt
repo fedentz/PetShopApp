@@ -28,8 +28,8 @@ import com.google.firebase.auth.FirebaseAuth
 fun HomeScreen(
     navController: NavController,
     viewModel: ProductsViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel(),
-    sessionViewModel: SessionViewModel
+    cartViewModel: CartViewModel
+
 ) {
 
 
