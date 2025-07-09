@@ -11,6 +11,7 @@ import androidx.compose.runtime.State
 import com.fedenintzel.petshopapp.data.mapper.toCartItem
 import com.fedenintzel.petshopapp.domain.model.Cart
 import com.fedenintzel.petshopapp.domain.model.Product
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CartUiState())
@@ -36,11 +38,35 @@ class CartViewModel @Inject constructor(
         loadCart()
     }
 
+    //    fun guardarCarritoEnFirestore(cart: Cart) {
+//        firestore.collection("carritos")
+//            .add(cart)
+//            .addOnSuccessListener {
+//                Log.d("Firestore", "Carrito guardado con éxito.")
+//                _state.value = _state.value.copy(carritoGuardado = true)
+//                limpiarCarrito()
+//            }
+//            .addOnFailureListener { e ->
+//                Log.e("Firestore", "Error al guardar carrito", e)
+//            }
+//    }
     fun guardarCarritoEnFirestore(cart: Cart) {
+        val uid = auth.currentUser?.uid ?: return
+
+        val carritoMap = mapOf(
+            "uid" to uid,
+            "finalizado" to false,
+            "total" to cart.total,
+            "discountedTotal" to cart.discountedTotal,
+            "totalProducts" to cart.totalProducts,
+            "totalQuantity" to cart.totalQuantity,
+            "products" to cart.products.map { it.copy() }
+        )
+
         firestore.collection("carritos")
-            .add(cart)
+            .add(carritoMap)
             .addOnSuccessListener {
-                Log.d("Firestore", "Carrito guardado con éxito.")
+                Log.d("Firestore", "Carrito guardado con éxito para UID: $uid")
                 _state.value = _state.value.copy(carritoGuardado = true)
                 limpiarCarrito()
             }
@@ -49,24 +75,10 @@ class CartViewModel @Inject constructor(
             }
     }
 
+
     fun resetSnackbar() {
         _state.value = _state.value.copy(carritoGuardado = false)
     }
-
-
-//    private fun loadCart() {
-//        viewModelScope.launch {
-//            _state.value = _state.value.copy(isLoading = true, error = null)
-//            try {
-//                val cart = getCartUseCase()
-//                _state.value = _state.value.copy(cart = cart)
-//            } catch (e: Exception) {
-//                _state.value = _state.value.copy(error = e.message ?: "Error desconocido")
-//            } finally {
-//                _state.value = _state.value.copy(isLoading = false)
-//            }
-//        }
-//    }
 
     fun limpiarCarrito() {
         _state.value = _state.value.copy(
