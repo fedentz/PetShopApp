@@ -39,7 +39,7 @@ fun ProductDetailScreen(
     navController: NavController,
     productId: Int,
     viewModel: ProductDetailViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    cartViewModel: CartViewModel
 ) {
     val product by viewModel.product.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()

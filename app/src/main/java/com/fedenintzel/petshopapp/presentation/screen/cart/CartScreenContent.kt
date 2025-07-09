@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,9 +33,13 @@ import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 @Composable
 fun CartScreenContent(
     navController: NavController,
-    viewModel: CartViewModel = hiltViewModel()
+    cartViewModel: CartViewModel
 ) {
-    val state = viewModel.state.value
+    val state by cartViewModel.state
+    val error = state.error
+    val cart = state.cart
+
+
     var itemToRemove by remember { mutableStateOf<Int?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -58,16 +63,16 @@ fun CartScreenContent(
                         )
                     }
 
-                    state.error != null -> {
+                    error != null -> {
                         Text(
-                            text = state.error,
+                            text = error,
                             color = Color.Red,
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
 
-                    state.cart != null -> {
-                        val cart = state.cart
+                    cart != null -> {
+
 
                         Column(modifier = Modifier.fillMaxSize()) {
                             //  Top bar
@@ -112,6 +117,17 @@ fun CartScreenContent(
                             }
 
                             //  Lista de productos
+
+//                            // Log de control
+//                            LaunchedEffect(cart.products) {
+//                                Log.d("CartScreen", "Renderizando ${cart.products.size} productos en el carrito")
+//                                cart.products.forEach {
+//                                    Log.d("CartScreen", " - ${it.title} x${it.quantity} ($${it.price})")
+//                                }
+//                            }
+
+
+
                             LazyColumn(
                                 modifier = Modifier
                                     .weight(1f)
@@ -239,7 +255,7 @@ fun CartScreenContent(
 //                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
                                     Button(
                                         onClick = {
-                                            state.cart?.let { viewModel.guardarCarritoEnFirestore(it) }
+                                            state.cart?.let { cartViewModel.guardarCarritoEnFirestore(it) }
                                             Log.d("DEBUG_CHECKOUT", "Carrito a guardar: $cart")
                                             navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD)
                                         },
@@ -266,7 +282,7 @@ fun CartScreenContent(
                         onDismissRequest = { itemToRemove = null },
                         confirmButton = {
                             TextButton(onClick = {
-                                itemToRemove?.let { viewModel.removeFromCart(it) }
+                                itemToRemove?.let { cartViewModel.removeFromCart(it) }
                                 itemToRemove = null
                             }) {
                                 Text("Delete")
@@ -285,7 +301,7 @@ fun CartScreenContent(
                 LaunchedEffect(state.carritoGuardado) {
                     if (state.carritoGuardado) {
                         snackbarHostState.showSnackbar("Carrito guardado con éxito")
-                        viewModel.resetSnackbar()
+                        cartViewModel.resetSnackbar()
                     }
                 }
             }

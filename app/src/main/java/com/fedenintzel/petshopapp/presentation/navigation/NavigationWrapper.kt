@@ -53,7 +53,8 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun NavigationWrapper(
-    sessionViewModel: SessionViewModel = hiltViewModel()
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -135,7 +136,8 @@ fun NavigationWrapper(
             composable(HomeDestinations.HOME) {
                 HomeScreen(
                     navController = navController,
-                    sessionViewModel = sessionViewModel)
+                    cartViewModel = cartViewModel
+                    )
             }
             composable(HomeDestinations.NOTIFICATIONS) {
                 NotificationsScreen(onBack = { navController.popBackStack() })
@@ -144,7 +146,10 @@ fun NavigationWrapper(
                 SearchScreen(navController = navController)
             }
             composable(HomeDestinations.BEST_SELLER) {
-                BestSellerScreen(navController = navController)
+                BestSellerScreen(
+                    navController = navController,
+                    cartViewModel = cartViewModel
+                )
             }
             composable(
                 route = "${HomeDestinations.PRODUCT_DETAIL}/{productId}",
@@ -153,7 +158,8 @@ fun NavigationWrapper(
                 val productId = backStackEntry.arguments?.getInt("productId") ?: 0
                 ProductDetailScreen(
                     navController = navController,
-                    productId = productId
+                    productId = productId,
+                    cartViewModel = cartViewModel
                 )
             }
 
@@ -192,12 +198,11 @@ fun NavigationWrapper(
 //                )
 //            }
             composable(Destinations.CART) {
-                val parentEntry = remember { navController.getBackStackEntry(HomeDestinations.HOME) }
-                val cartViewModel: CartViewModel = hiltViewModel(parentEntry)
+
 
                 CartScreenContent(
                     navController = navController,
-                    viewModel = cartViewModel
+                    cartViewModel = cartViewModel
                 )
             }
 

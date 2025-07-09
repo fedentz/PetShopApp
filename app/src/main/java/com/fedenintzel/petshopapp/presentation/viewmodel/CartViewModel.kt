@@ -28,7 +28,10 @@ class CartViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
+
     private val _state = mutableStateOf(CartUiState())
+
+
     val state: State<CartUiState> = _state
 
     private val _showSnackbar = mutableStateOf(false)
@@ -95,6 +98,11 @@ class CartViewModel @Inject constructor(
     }
 
     private fun loadCart() {
+        if (_state.value.cart != null && _state.value.cart!!.products.isNotEmpty()) {
+            Log.d("CartViewModel", "loadCart() omitido: ya hay productos en el carrito.")
+            return
+        }
+
         _state.value = _state.value.copy(
             cart = Cart(
                 id = 1,
@@ -106,6 +114,7 @@ class CartViewModel @Inject constructor(
                 userId = 1
             )
         )
+        Log.d("CartViewModel", "loadCart() ejecutado: carrito inicializado vacío.")
     }
 
 
@@ -125,6 +134,7 @@ class CartViewModel @Inject constructor(
 
     fun addToCart(product: Product) {
         Log.d("DEBUG_ADD", "Agregando producto al carrito: $product")
+        Log.d("CartViewModel", "Instance: ${this.hashCode()}")
         val currentCart = _state.value.cart
         val currentProducts = currentCart?.products?.toMutableList() ?: mutableListOf()
 
