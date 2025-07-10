@@ -19,6 +19,7 @@ import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
 import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewModel.ProductsViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @JvmOverloads
 @Composable
@@ -33,6 +34,14 @@ fun HomeScreen(
     val state by viewModel.state.collectAsState()
     val showSnackbar by cartViewModel.showSnackbar
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+    LaunchedEffect(uid) {
+        if (uid != null) {
+            cartViewModel.loadCart()
+        }
+    }
 
     LaunchedEffect(showSnackbar) {
         if (showSnackbar) {

@@ -17,6 +17,7 @@ import com.fedenintzel.petshopapp.domain.model.settings.SettingsItem
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.SettingsBaseScreen
 import com.fedenintzel.petshopapp.presentation.components.SettingsItemRow
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
 import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
@@ -54,7 +55,8 @@ fun SettingsPageScreen(
     categories: List<SettingsCategory> = FakeSettingsDataProvider.getSettingsCategories(),
     onBackClick: () -> Unit,
     onItemClick: (SettingsItem) -> Unit,
-    sessionViewModel: SessionViewModel
+    sessionViewModel: SessionViewModel,
+
 
 ) {
 
@@ -64,9 +66,10 @@ fun SettingsPageScreen(
         showBottomButton = true,
         bottomButtonText = "Log Out",
         onBottomButtonClick = {
+
             sessionViewModel.logout()
-            navController.navigate(Destinations.LOGIN) {popUpTo(0) }
-                              },
+            navController.navigate(Destinations.LOGIN) { popUpTo(0) }
+        },
         bottomButtonFilled = false
     ) {
         Column(

@@ -80,7 +80,7 @@ class CartViewModel @Inject constructor(
         _state.value = _state.value.copy(carritoGuardado = false)
     }
 
-    private fun limpiarCarrito() {
+    fun limpiarCarrito() {
         _state.value = _state.value.copy(
             cart = Cart(
                 id = 1,
@@ -89,7 +89,7 @@ class CartViewModel @Inject constructor(
                 discountedTotal = 0.0,
                 totalProducts = 0,
                 totalQuantity = 0,
-                userId = 1
+                userId = ""
             )
         )
 
@@ -98,9 +98,10 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private fun loadCart() {
+    fun loadCart() {
         viewModelScope.launch {
             try {
+                val uid = auth.currentUser?.uid ?: return@launch
                 val cartItems = getCartUseCase()
 
                 val cart = if (cartItems.isNotEmpty()) {
@@ -111,7 +112,7 @@ class CartViewModel @Inject constructor(
                         discountedTotal = cartItems.sumOf { it.price },
                         totalProducts = cartItems.sumOf { it.quantity },
                         totalQuantity = cartItems.sumOf { it.quantity },
-                        userId = 1
+                        userId = uid
                     ).also {
                         Log.d("CartViewModel", "loadCart() - Se recuperó carrito con ${cartItems.size} productos")
                     }
@@ -123,7 +124,7 @@ class CartViewModel @Inject constructor(
                         discountedTotal = 0.0,
                         totalProducts = 0,
                         totalQuantity = 0,
-                        userId = 1
+                        userId = uid
                     ).also {
                         Log.d("CartViewModel", "loadCart() - No había carrito previo, inicializado vacío.")
                     }
@@ -159,6 +160,7 @@ class CartViewModel @Inject constructor(
 
     fun addToCart(product: Product) {
         Log.d("DEBUG_ADD", "Agregando producto al carrito: $product")
+        val uid = auth.currentUser?.uid ?: return
         val currentCart = _state.value.cart
         val currentProducts = currentCart?.products?.toMutableList() ?: mutableListOf()
 
@@ -180,8 +182,10 @@ class CartViewModel @Inject constructor(
         val updatedCart = currentCart?.copy(
             products = currentProducts,
             totalProducts = currentProducts.sumOf { it.quantity },
+            totalQuantity = currentProducts.sumOf { it.quantity },
             total = updatedTotal,
-            discountedTotal = updatedTotal
+            discountedTotal = updatedTotal,
+            userId = uid
         ) ?: Cart(
             id = 1,
             products = currentProducts,
@@ -189,7 +193,7 @@ class CartViewModel @Inject constructor(
             discountedTotal = updatedTotal,
             totalProducts = currentProducts.sumOf { it.quantity },
             totalQuantity = currentProducts.sumOf { it.quantity },
-            userId = 1
+            userId = uid
         )
 
         _state.value = _state.value.copy(cart = updatedCart)

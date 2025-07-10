@@ -71,6 +71,7 @@ fun NavigationWrapper(
                 },
                 navController = navController,
                 sessionViewModel = sessionViewModel
+
             )
         }
     )

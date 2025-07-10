@@ -15,5 +15,5 @@ data class Cart(
     val discountedTotal: Double,
     val totalProducts: Int,
     val totalQuantity: Int,
-    val userId: Int
+    val userId: String
 )
