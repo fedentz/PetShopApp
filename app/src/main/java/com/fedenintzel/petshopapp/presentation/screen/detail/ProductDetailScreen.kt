@@ -19,8 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,8 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.fedenintzel.petshopapp.R
-import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductDetailViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductDetailViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @Composable

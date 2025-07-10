@@ -1,15 +1,10 @@
-package com.fedenintzel.petshopapp.data.repository
+package com.fedenintzel.petshopapp.data.local
 
-import com.fedenintzel.petshopapp.data.local.CartDao
+import com.fedenintzel.petshopapp.data.mapper.toCartItem
+import com.fedenintzel.petshopapp.data.mapper.toEntity
 import com.fedenintzel.petshopapp.domain.model.CartItem
 import com.fedenintzel.petshopapp.domain.repository.CartRepository
-import com.fedenintzel.petshopapp.data.mapper.toEntity
-import com.fedenintzel.petshopapp.data.mapper.toCartItem
 import javax.inject.Inject
-
-/**
-
- */
 
 class CartRepositoryImpl @Inject constructor(
     private val cartDao: CartDao

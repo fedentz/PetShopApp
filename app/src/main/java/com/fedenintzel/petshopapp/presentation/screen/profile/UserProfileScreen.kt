@@ -18,9 +18,9 @@ import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
-import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.FavoritesViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 
 
 /**

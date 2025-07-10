@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,10 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fedenintzel.petshopapp.presentation.components.CartItemCard
-import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -255,7 +253,10 @@ fun CartScreenContent(
 //                                onClick = { navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD) },
                                     Button(
                                         onClick = {
-                                            state.cart?.let { cartViewModel.guardarCarritoEnFirestore(it) }
+                                            state.cart?.let {
+                                                cartViewModel.guardarCarritoEnFirestore(it)
+                                            }
+
                                             Log.d("DEBUG_CHECKOUT", "Carrito a guardar: $cart")
                                             navController.navigate(Destinations.CHOOSE_PAYMENT_METHOD)
                                         },

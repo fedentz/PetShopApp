@@ -5,7 +5,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -45,8 +44,8 @@ import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsNotificat
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPrivacyScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsSecurityScreen
-import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 import kotlinx.coroutines.launch
 
 
@@ -72,6 +71,7 @@ fun NavigationWrapper(
                 },
                 navController = navController,
                 sessionViewModel = sessionViewModel
+
             )
         }
     )

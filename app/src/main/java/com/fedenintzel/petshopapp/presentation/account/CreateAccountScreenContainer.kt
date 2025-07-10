@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
-import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 import kotlinx.coroutines.launch
 
 /**

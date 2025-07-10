@@ -11,9 +11,12 @@ interface FavoriteProductDao {
     @Delete
     suspend fun delete(product: FavoriteProductEntity)
 
-    @Query("SELECT * FROM favorite_products WHERE id = :id")
-    suspend fun getById(id: Int): FavoriteProductEntity?
+    @Query("SELECT * FROM favorite_products WHERE id = :id AND userId = :userId")
+    suspend fun getById(id: Int, userId: String): FavoriteProductEntity?
 
-    @Query("SELECT * FROM favorite_products")
-    fun getAll(): Flow<List<FavoriteProductEntity>>
+    @Query("SELECT * FROM favorite_products WHERE userId = :userId")
+    fun getAll(userId: String): Flow<List<FavoriteProductEntity>>
+
+    @Query("DELETE FROM favorite_products WHERE userId = :userId")
+    suspend fun clearFavorites(userId: String)
 }
