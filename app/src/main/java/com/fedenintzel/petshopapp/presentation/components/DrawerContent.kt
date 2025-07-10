@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.domain.model.settings.FakeSettingsDataProvider
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
-import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 
 
 @Composable

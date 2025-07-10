@@ -1,4 +1,4 @@
-package com.fedenintzel.petshopapp.presentation.viewmodel
+package com.fedenintzel.petshopapp.presentation.viewModel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

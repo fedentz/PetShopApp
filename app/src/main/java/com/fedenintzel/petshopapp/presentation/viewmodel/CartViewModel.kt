@@ -1,16 +1,20 @@
-package com.fedenintzel.petshopapp.presentation.viewmodel
+package com.fedenintzel.petshopapp.presentation.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.fedenintzel.petshopapp.domain.usecase.GetCartUseCase
 import com.fedenintzel.petshopapp.presentation.screen.cart.CartUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
+import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.data.mapper.toCartItem
 import com.fedenintzel.petshopapp.domain.model.Cart
 import com.fedenintzel.petshopapp.domain.model.Product
+import com.fedenintzel.petshopapp.domain.usecase.AddItemToCartUseCase
+import com.fedenintzel.petshopapp.domain.usecase.ClearCartUseCase
+import com.fedenintzel.petshopapp.domain.usecase.GetCartUseCase
+import com.fedenintzel.petshopapp.domain.usecase.RemoveItemFromCartUseCase
+import com.fedenintzel.petshopapp.domain.usecase.SaveCartUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
@@ -23,9 +27,13 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val getCartUseCase: GetCartUseCase,
     private val firestore: FirebaseFirestore,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val getCartUseCase: GetCartUseCase,
+    private val addItemToCartUseCase: AddItemToCartUseCase,
+    private val removeItemFromCartUseCase: RemoveItemFromCartUseCase,
+    private val clearCartUseCase: ClearCartUseCase,
+
 ) : ViewModel() {
 
 
@@ -41,18 +49,7 @@ class CartViewModel @Inject constructor(
         loadCart()
     }
 
-    //    fun guardarCarritoEnFirestore(cart: Cart) {
-//        firestore.collection("carritos")
-//            .add(cart)
-//            .addOnSuccessListener {
-//                Log.d("Firestore", "Carrito guardado con éxito.")
-//                _state.value = _state.value.copy(carritoGuardado = true)
-//                limpiarCarrito()
-//            }
-//            .addOnFailureListener { e ->
-//                Log.e("Firestore", "Error al guardar carrito", e)
-//            }
-//    }
+
     fun guardarCarritoEnFirestore(cart: Cart) {
         val uid = auth.currentUser?.uid ?: return
 
@@ -83,7 +80,7 @@ class CartViewModel @Inject constructor(
         _state.value = _state.value.copy(carritoGuardado = false)
     }
 
-    fun limpiarCarrito() {
+    private fun limpiarCarrito() {
         _state.value = _state.value.copy(
             cart = Cart(
                 id = 1,
@@ -95,27 +92,51 @@ class CartViewModel @Inject constructor(
                 userId = 1
             )
         )
+
+        viewModelScope.launch {
+            clearCartUseCase()
+        }
     }
 
     private fun loadCart() {
-        if (_state.value.cart != null && _state.value.cart!!.products.isNotEmpty()) {
-            Log.d("CartViewModel", "loadCart() omitido: ya hay productos en el carrito.")
-            return
-        }
+        viewModelScope.launch {
+            try {
+                val cartItems = getCartUseCase()
 
-        _state.value = _state.value.copy(
-            cart = Cart(
-                id = 1,
-                products = emptyList(),
-                total = 0.0,
-                discountedTotal = 0.0,
-                totalProducts = 0,
-                totalQuantity = 0,
-                userId = 1
-            )
-        )
-        Log.d("CartViewModel", "loadCart() ejecutado: carrito inicializado vacío.")
+                val cart = if (cartItems.isNotEmpty()) {
+                    Cart(
+                        id = 1,
+                        products = cartItems,
+                        total = cartItems.sumOf { it.price },
+                        discountedTotal = cartItems.sumOf { it.price },
+                        totalProducts = cartItems.sumOf { it.quantity },
+                        totalQuantity = cartItems.sumOf { it.quantity },
+                        userId = 1
+                    ).also {
+                        Log.d("CartViewModel", "loadCart() - Se recuperó carrito con ${cartItems.size} productos")
+                    }
+                } else {
+                    Cart(
+                        id = 1,
+                        products = emptyList(),
+                        total = 0.0,
+                        discountedTotal = 0.0,
+                        totalProducts = 0,
+                        totalQuantity = 0,
+                        userId = 1
+                    ).also {
+                        Log.d("CartViewModel", "loadCart() - No había carrito previo, inicializado vacío.")
+                    }
+                }
+
+                _state.value = _state.value.copy(cart = cart)
+
+            } catch (e: Exception) {
+                Log.e("CartViewModel", "Error al cargar el carrito", e)
+            }
+        }
     }
+
 
 
     fun removeFromCart(productId: Int) {
@@ -130,11 +151,14 @@ class CartViewModel @Inject constructor(
         )
 
         _state.value = _state.value.copy(cart = updatedCart)
+
+        viewModelScope.launch {
+            removeItemFromCartUseCase(productId)
+        }
     }
 
     fun addToCart(product: Product) {
         Log.d("DEBUG_ADD", "Agregando producto al carrito: $product")
-        Log.d("CartViewModel", "Instance: ${this.hashCode()}")
         val currentCart = _state.value.cart
         val currentProducts = currentCart?.products?.toMutableList() ?: mutableListOf()
 
@@ -152,24 +176,34 @@ class CartViewModel @Inject constructor(
         }
 
         val updatedTotal = currentProducts.sumOf { it.price }
+
         val updatedCart = currentCart?.copy(
             products = currentProducts,
             totalProducts = currentProducts.sumOf { it.quantity },
             total = updatedTotal,
             discountedTotal = updatedTotal
-        ) ?: com.fedenintzel.petshopapp.domain.model.Cart(
+        ) ?: Cart(
             id = 1,
             products = currentProducts,
             total = updatedTotal,
             discountedTotal = updatedTotal,
             totalProducts = currentProducts.sumOf { it.quantity },
-            userId = 1,
-            totalQuantity = currentProducts.sumOf { it.quantity }
+            totalQuantity = currentProducts.sumOf { it.quantity },
+            userId = 1
         )
 
         _state.value = _state.value.copy(cart = updatedCart)
+
+        viewModelScope.launch {
+            val item = updatedCart.products.find { it.id == product.id }
+            if (item != null) {
+                addItemToCartUseCase(item)
+            }
+        }
+
         notifyAddedToCart()
     }
+
 
     fun notifyAddedToCart() {
         _showSnackbar.value = true

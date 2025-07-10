@@ -3,7 +3,7 @@ package com.fedenintzel.petshopapp.presentation.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fedenintzel.petshopapp.domain.usecase.RegisterUseCase
-import com.fedenintzel.petshopapp.presentation.viewmodel.CreateAccountUiState
+import com.fedenintzel.petshopapp.presentation.viewModel.CreateAccountUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

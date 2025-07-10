@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fedenintzel.petshopapp.presentation.components.CartItemCard
 import com.fedenintzel.petshopapp.presentation.components.SettingsBaseScreen
-import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.FavoritesViewModel
 
 @Composable
 fun FavoriteScreen(

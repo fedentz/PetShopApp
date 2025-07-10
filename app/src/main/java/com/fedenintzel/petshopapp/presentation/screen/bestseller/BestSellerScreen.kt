@@ -20,8 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.components.ProductCard
-import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductsViewModel
 import com.fedenintzel.petshopapp.ui.theme.Poppins
 
 @OptIn(ExperimentalMaterial3Api::class)

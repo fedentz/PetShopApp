@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
-import com.fedenintzel.petshopapp.presentation.viewmodel.LoginViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.SessionViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.LoginViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 
 /**
  * Container que conecta el LoginViewModel con la UI de LoginScreen.
