@@ -52,7 +52,7 @@ fun PurchaseHistoryScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
 
-
+            // TopBar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,12 +99,30 @@ fun PurchaseHistoryScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                LazyColumn {
-                    items(history) { cart ->
-                        PurchaseCard(cart)
+                if (history.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No purchases found",
+                            fontFamily = Poppins,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Gray
+                        )
+                    }
+                } else {
+                    LazyColumn {
+                        items(history) { cart ->
+                            PurchaseCard(cart)
+                        }
                     }
                 }
             }
         }
     }
 }
+
