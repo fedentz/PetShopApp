@@ -181,7 +181,7 @@ fun HomeScreen(
             BottomBar(
                 selected = BottomBarItem.HOME,
                 onHomeClick = { /* ya estás en Home */ },
-                onTimeClick = { /* a futuro */ },
+                onTimeClick = { navController.navigate(Destinations.PURCHASE_HISTORY) },
                 onBagClick = { navController.navigate(Destinations.CART) },
                 onProfileClick = { navController.navigate(Destinations.USER_PROFILE) },
                 modifier = Modifier

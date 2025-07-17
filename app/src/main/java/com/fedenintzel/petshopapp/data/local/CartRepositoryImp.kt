@@ -2,6 +2,7 @@ package com.fedenintzel.petshopapp.data.local
 
 import com.fedenintzel.petshopapp.data.mapper.toCartItem
 import com.fedenintzel.petshopapp.data.mapper.toEntity
+import com.fedenintzel.petshopapp.data.remote.dto.CartDto
 import com.fedenintzel.petshopapp.domain.model.CartItem
 import com.fedenintzel.petshopapp.domain.repository.CartRepository
 import javax.inject.Inject
@@ -32,5 +33,9 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun clearCart(userId: String) {
         cartDao.clearCart(userId)
+    }
+
+    override suspend fun getCartsByUser(userId: String): List<CartDto> {
+        throw UnsupportedOperationException("No se soporta getCartsByUser en local")
     }
 }
