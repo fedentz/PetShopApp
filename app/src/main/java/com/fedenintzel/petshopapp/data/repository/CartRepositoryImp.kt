@@ -5,6 +5,10 @@ import com.fedenintzel.petshopapp.domain.model.CartItem
 import com.fedenintzel.petshopapp.domain.repository.CartRepository
 import com.fedenintzel.petshopapp.data.mapper.toEntity
 import com.fedenintzel.petshopapp.data.mapper.toCartItem
+import com.fedenintzel.petshopapp.data.remote.dto.CartDto
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 /**
@@ -12,7 +16,8 @@ import javax.inject.Inject
  */
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private val firestore: FirebaseFirestore
 ) : CartRepository {
 
     override suspend fun getCartItems(userId: String): List<CartItem> {
@@ -29,5 +34,15 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun clearCart(userId: String) {
         cartDao.clearCart(userId)
+    }
+
+    override suspend fun getCartsByUser(userId: String): List<CartDto> {
+        return firestore.collection("carritos")
+            .whereEqualTo("uid", userId)
+            //.orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toObject(CartDto::class.java) }
     }
 }

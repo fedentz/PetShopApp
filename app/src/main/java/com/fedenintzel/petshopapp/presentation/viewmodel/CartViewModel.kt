@@ -13,8 +13,10 @@ import com.fedenintzel.petshopapp.domain.model.Product
 import com.fedenintzel.petshopapp.domain.usecase.AddItemToCartUseCase
 import com.fedenintzel.petshopapp.domain.usecase.ClearCartUseCase
 import com.fedenintzel.petshopapp.domain.usecase.GetCartUseCase
+import com.fedenintzel.petshopapp.domain.usecase.GetPurchaseHistoryUseCase
 import com.fedenintzel.petshopapp.domain.usecase.RemoveItemFromCartUseCase
-import com.fedenintzel.petshopapp.domain.usecase.SaveCartUseCase
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,9 +36,16 @@ class CartViewModel @Inject constructor(
     private val addItemToCartUseCase: AddItemToCartUseCase,
     private val removeItemFromCartUseCase: RemoveItemFromCartUseCase,
     private val clearCartUseCase: ClearCartUseCase,
+    private val getPurchaseHistoryUseCase: GetPurchaseHistoryUseCase
+
 
 ) : ViewModel() {
 
+    var purchaseHistory by mutableStateOf<List<Cart>>(emptyList())
+        private set
+
+    var isLoadingHistory by mutableStateOf(false)
+        private set
 
     private val _state = mutableStateOf(CartUiState())
 
@@ -50,6 +59,22 @@ class CartViewModel @Inject constructor(
         loadCart()
     }
 
+
+    fun loadPurchaseHistory(userId: String) {
+        viewModelScope.launch {
+            println(" [ViewModel] Cargando historial para: $userId")
+            isLoadingHistory = true
+            try {
+                val result = getPurchaseHistoryUseCase(userId)
+                println(" [ViewModel] Carritos obtenidos: ${result.size}")
+                purchaseHistory = result
+            } catch (e: Exception) {
+                println(" [ViewModel] Error: ${e.message}")
+                purchaseHistory = emptyList()
+            }
+            isLoadingHistory = false
+        }
+    }
 
     fun guardarCarritoEnFirestore(cart: Cart) {
         val uid = auth.currentUser?.uid ?: return

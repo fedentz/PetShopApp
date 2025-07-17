@@ -35,6 +35,7 @@ import com.fedenintzel.petshopapp.presentation.screen.payment.ChoosePaymentMetho
 import com.fedenintzel.petshopapp.presentation.screen.payment.PaymentSuccessScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.SellerProfileScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.UserProfileScreen
+import com.fedenintzel.petshopapp.presentation.screen.purchaseHistory.PurchaseHistoryScreen
 import com.fedenintzel.petshopapp.presentation.screen.search.SearchScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsAccountScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsChangeEmailScreen
@@ -203,6 +204,17 @@ fun NavigationWrapper(
                 CartScreenContent(
                     navController = navController,
                     cartViewModel = cartViewModel
+                )
+            }
+
+            composable(Destinations.PURCHASE_HISTORY) {
+
+
+                PurchaseHistoryScreen(
+                    userId = sessionViewModel.user.value?.id ?: "",
+                    viewModel = cartViewModel,
+                    onBack = { navController.popBackStack() }
+
                 )
             }
 
