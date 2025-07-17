@@ -15,7 +15,15 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addOrUpdateCartItem(userId: String, item: CartItem) {
-        cartDao.insertItem(item.toEntity(userId))
+        val existing = cartDao.getItem(userId, item.id)
+        val entity = item.toEntity(userId)
+        if (existing != null) {
+            // actualizamos cantidades
+            val updatedItem = entity.copy(quantity = existing.quantity + item.quantity)
+            cartDao.updateItem(updatedItem)
+        } else {
+            cartDao.insertItem(entity)
+        }
     }
 
     override suspend fun removeCartItem(userId: String, productId: Int) {
