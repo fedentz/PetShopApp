@@ -16,6 +16,7 @@ import com.fedenintzel.petshopapp.domain.usecase.GetCartUseCase
 import com.fedenintzel.petshopapp.domain.usecase.RemoveItemFromCartUseCase
 import com.fedenintzel.petshopapp.domain.usecase.SaveCartUseCase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -60,7 +61,8 @@ class CartViewModel @Inject constructor(
             "discountedTotal" to cart.discountedTotal,
             "totalProducts" to cart.totalProducts,
             "totalQuantity" to cart.totalQuantity,
-            "products" to cart.products.map { it.copy() }
+            "products" to cart.products.map { it.copy() },
+            "timestamp" to FieldValue.serverTimestamp()
         )
 
         firestore.collection("carritos")
