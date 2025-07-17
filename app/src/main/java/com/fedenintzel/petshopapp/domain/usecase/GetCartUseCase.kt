@@ -1,21 +1,24 @@
 package com.fedenintzel.petshopapp.domain.usecase
 
+import com.fedenintzel.petshopapp.data.local.CartDao
+import com.fedenintzel.petshopapp.data.local.CartItemEntity
 import com.fedenintzel.petshopapp.domain.model.Cart
+import com.fedenintzel.petshopapp.domain.model.CartItem
 import com.fedenintzel.petshopapp.domain.repository.CartRepository
+import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
 /**
- * UseCase para obtener el carrito desde el repositorio.
- * Este caso de uso abstrae la lógica de obtención del carrito, permitiendo reutilización
- * y facilitando testeo en la capa de presentación.
+ * UseCase para obtener el carrito guardado hasta el momento, desde Room.
  *
- * Le pasamos id = 1 para que funcione con la API
  */
 
 class GetCartUseCase @Inject constructor(
-    private val repository: CartRepository
+    private val cartRepository: CartRepository,
+    private val auth: FirebaseAuth
 ) {
-    suspend operator fun invoke(): Cart {
-        return repository.getCartById(1)
+    suspend operator fun invoke(): List<CartItem> {
+        val uid = auth.currentUser?.uid ?: return emptyList()
+        return cartRepository.getCartItems(uid)
     }
 }

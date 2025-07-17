@@ -1,5 +1,6 @@
 package com.fedenintzel.petshopapp.presentation.screen.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,8 +18,9 @@ import com.fedenintzel.petshopapp.R
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations.SELLER_PROFILE
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
-import com.fedenintzel.petshopapp.presentation.viewmodel.FavoritesViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.FavoritesViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 
 
 /**
@@ -38,11 +40,19 @@ import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
 fun UserProfileScreen(
     navController: NavController,
     favoritesViewModel: FavoritesViewModel = hiltViewModel(),
-    productsViewModel: ProductsViewModel = hiltViewModel()
+    productsViewModel: ProductsViewModel = hiltViewModel(),
+    sessionViewModel: SessionViewModel
+
 ) {
     val favoriteProducts by favoritesViewModel.favorites.collectAsState()
+    val user = sessionViewModel.user.value
+    LaunchedEffect(user) {
+        Log.d("UserProfile", "Usuario actual: $user")
+    }
 
-    Scaffold(
+
+
+   Scaffold(
         bottomBar = {
             BottomBar(
                 selected = BottomBarItem.PROFILE,
@@ -80,7 +90,7 @@ fun UserProfileScreen(
             ProfileHeader(
                 backgroundPainter = painterResource(id = R.drawable.profile_background),
                 profileImage = painterResource(id = R.drawable.profile_avatar),
-                userName = "Abduldul"
+                userName = user?.firstName ?:"User"
             )
 
             Spacer(modifier = Modifier.height(16.dp))

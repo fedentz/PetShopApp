@@ -1,4 +1,4 @@
-package com.fedenintzel.petshopapp.presentation.viewmodel
+package com.fedenintzel.petshopapp.presentation.viewModel
 
 /**
  * Estado que expone el CreateAccountViewModel a la UI.

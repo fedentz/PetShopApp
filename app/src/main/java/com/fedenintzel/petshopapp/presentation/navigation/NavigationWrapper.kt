@@ -1,10 +1,12 @@
 package com.fedenintzel.petshopapp.presentation.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,6 +35,7 @@ import com.fedenintzel.petshopapp.presentation.screen.payment.ChoosePaymentMetho
 import com.fedenintzel.petshopapp.presentation.screen.payment.PaymentSuccessScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.SellerProfileScreen
 import com.fedenintzel.petshopapp.presentation.screen.profile.UserProfileScreen
+import com.fedenintzel.petshopapp.presentation.screen.purchaseHistory.PurchaseHistoryScreen
 import com.fedenintzel.petshopapp.presentation.screen.search.SearchScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsAccountScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsChangeEmailScreen
@@ -42,12 +45,16 @@ import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsNotificat
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPageScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsPrivacyScreen
 import com.fedenintzel.petshopapp.presentation.screen.settings.SettingsSecurityScreen
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.SessionViewModel
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun NavigationWrapper(
-
+    sessionViewModel: SessionViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -63,7 +70,9 @@ fun NavigationWrapper(
                         navController.navigate(SETTINGS)
                     }
                 },
-                navController = navController
+                navController = navController,
+                sessionViewModel = sessionViewModel
+
             )
         }
     )
@@ -76,6 +85,8 @@ fun NavigationWrapper(
             // Onboarding
             composable(Destinations.ONBOARDING) {
                 OnBoardingScreen(
+                    navController = navController,
+                    sessionViewModel = sessionViewModel,
                     onContinue = {
                         navController.navigate(Destinations.LOGIN) {
                             popUpTo(Destinations.ONBOARDING) { inclusive = true }
@@ -90,7 +101,8 @@ fun NavigationWrapper(
 
                 LoginScreenContainer(
 
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             }
 
@@ -102,7 +114,8 @@ fun NavigationWrapper(
                    onLoginClick = {
                         navController.popBackStack(Destinations.LOGIN, false)
                     },
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             }
 
@@ -122,7 +135,10 @@ fun NavigationWrapper(
 
             // Home
             composable(HomeDestinations.HOME) {
-                HomeScreen(navController = navController)
+                HomeScreen(
+                    navController = navController,
+                    cartViewModel = cartViewModel
+                    )
             }
             composable(HomeDestinations.NOTIFICATIONS) {
                 NotificationsScreen(onBack = { navController.popBackStack() })
@@ -131,7 +147,10 @@ fun NavigationWrapper(
                 SearchScreen(navController = navController)
             }
             composable(HomeDestinations.BEST_SELLER) {
-                BestSellerScreen(navController = navController)
+                BestSellerScreen(
+                    navController = navController,
+                    cartViewModel = cartViewModel
+                )
             }
             composable(
                 route = "${HomeDestinations.PRODUCT_DETAIL}/{productId}",
@@ -140,7 +159,8 @@ fun NavigationWrapper(
                 val productId = backStackEntry.arguments?.getInt("productId") ?: 0
                 ProductDetailScreen(
                     navController = navController,
-                    productId = productId
+                    productId = productId,
+                    cartViewModel = cartViewModel
                 )
             }
 
@@ -163,17 +183,48 @@ fun NavigationWrapper(
 
                         route?.let { navController.navigate(it) }
                     },
-                    navController = navController                )
+                    navController = navController,
+                    sessionViewModel = sessionViewModel)
             }
 
             // Cart
+//            composable(Destinations.CART) {
+//                 CartScreenContent(navController = navController)
+//            }
+//            composable(Destinations.CART) {
+//                val cartViewModel: CartViewModel = hiltViewModel(navController.getBackStackEntry(HomeDestinations.HOME))
+//                CartScreenContent(
+//                    navController = navController,
+//                    viewModel = cartViewModel
+//                )
+//            }
             composable(Destinations.CART) {
-                 CartScreenContent(navController = navController)
+
+
+                CartScreenContent(
+                    navController = navController,
+                    cartViewModel = cartViewModel
+                )
             }
+
+            composable(Destinations.PURCHASE_HISTORY) {
+
+
+                PurchaseHistoryScreen(
+                    userId = sessionViewModel.user.value?.id ?: "",
+                    viewModel = cartViewModel,
+                    onBack = { navController.popBackStack() }
+
+                )
+            }
+
 
             //User Profile
             composable(Destinations.USER_PROFILE) {
-                UserProfileScreen(navController = navController)
+                UserProfileScreen(
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
+                )
             }
 
             //Seller Profile

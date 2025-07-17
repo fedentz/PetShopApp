@@ -6,12 +6,12 @@ package com.fedenintzel.petshopapp.data.remote.dto
  */
 
 data class CartItemDto(
-    val id: Int,
-    val title: String,
-    val price: Double,
-    val quantity: Int,
-    val total: Double,
-    val discountedTotal: Double,
-    val discountPercentage: Double,
-    val thumbnail: String
+    val id: Int = 0,
+    val title: String = "",
+    val price: Double = 0.0,
+    val quantity: Int = 0,
+    val total: Double = 0.0,
+    val discountPercentage: Double = 0.0,
+    val discountedPrice: Double = 0.0,
+    val thumbnail: String = ""
 )

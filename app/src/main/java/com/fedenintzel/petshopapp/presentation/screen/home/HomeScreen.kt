@@ -17,19 +17,31 @@ import androidx.navigation.NavController
 import com.fedenintzel.petshopapp.presentation.navigation.Destinations
 import com.fedenintzel.petshopapp.presentation.components.*
 import com.fedenintzel.petshopapp.presentation.screen.location.LocationSheet
-import com.fedenintzel.petshopapp.presentation.viewmodel.CartViewModel
-import com.fedenintzel.petshopapp.presentation.viewmodel.ProductsViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.CartViewModel
+import com.fedenintzel.petshopapp.presentation.viewModel.ProductsViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @JvmOverloads
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: ProductsViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    cartViewModel: CartViewModel
+
 ) {
+
+
     val state by viewModel.state.collectAsState()
     val showSnackbar by cartViewModel.showSnackbar
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+    LaunchedEffect(uid) {
+        if (uid != null) {
+            cartViewModel.loadCart()
+        }
+    }
 
     LaunchedEffect(showSnackbar) {
         if (showSnackbar) {
@@ -169,7 +181,7 @@ fun HomeScreen(
             BottomBar(
                 selected = BottomBarItem.HOME,
                 onHomeClick = { /* ya estás en Home */ },
-                onTimeClick = { /* a futuro */ },
+                onTimeClick = { navController.navigate(Destinations.PURCHASE_HISTORY) },
                 onBagClick = { navController.navigate(Destinations.CART) },
                 onProfileClick = { navController.navigate(Destinations.USER_PROFILE) },
                 modifier = Modifier

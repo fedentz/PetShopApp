@@ -3,9 +3,10 @@ package com.fedenintzel.petshopapp.di
 
 import android.content.Context
 import com.fedenintzel.petshopapp.R
-import com.fedenintzel.petshopapp.data.remote.api.AuthApiService
 import com.fedenintzel.petshopapp.data.remote.api.CartApiService
 import com.fedenintzel.petshopapp.data.remote.api.ProductApiService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,12 +57,13 @@ object NetworkModule {
         retrofit.create(CartApiService::class.java)
 
     /**
+     *  Ya no la necesitamos!!
      * Provee una instancia de AuthApiService
      */
-    @Provides
-    @Singleton
-    fun provideAuthApiService(retrofit: Retrofit): AuthApiService =
-        retrofit.create(AuthApiService::class.java)
+//    @Provides
+//    @Singleton
+//    fun provideAuthApiService(retrofit: Retrofit): AuthApiService =
+//        retrofit.create(AuthApiService::class.java)
 
     /**
      * Provee una instancia de ProductApiService.
@@ -70,6 +72,20 @@ object NetworkModule {
     @Singleton
     fun provideProductApiService(retrofit: Retrofit): ProductApiService =
         retrofit.create(ProductApiService::class.java)
+
+    /**
+     * Provee una instancia de FirebaseAuth
+     */
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    /**
+     * Provee una instancia de Firebase DB
+     */
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
 }
